@@ -346,7 +346,7 @@ def client_status(
         async def _get_status():
             mac, name = await resolve_client_identifier(api_client, identifier)
             if not mac:
-                return None, None, None
+                return None, None, None, None
             # Get from all clients (includes offline) for block status
             all_clients = await api_client.list_all_clients()
             client_info = None
@@ -354,12 +354,17 @@ def client_status(
                 if c.get("mac", "").lower() == mac.lower():
                     client_info = c
                     break
-            # Also check active clients for online status
+            # Also check active clients for online status and live data
             active_clients = await api_client.list_clients()
-            is_online = any(c.get("mac", "").lower() == mac.lower() for c in active_clients)
-            return client_info, name, is_online
+            active_info = None
+            for c in active_clients:
+                if c.get("mac", "").lower() == mac.lower():
+                    active_info = c
+                    break
+            is_online = active_info is not None
+            return client_info, active_info, name, is_online
 
-        client_info, resolved_name, is_online = asyncio.run(_get_status())
+        client_info, active_info, resolved_name, is_online = asyncio.run(_get_status())
     except Exception as e:
         handle_error(e)
         return
@@ -368,12 +373,20 @@ def client_status(
         console.print(f"[yellow]Client not found:[/yellow] {identifier}")
         raise typer.Exit(1)
 
-    # Build status info
-    name = resolved_name or client_info.get("name") or client_info.get("hostname") or "(unknown)"
-    mac = client_info.get("mac", "").upper()
+    # Build status info - use active_info for live data if online
+    info = active_info if active_info else client_info
+
+    name = resolved_name or info.get("name") or info.get("hostname") or "(unknown)"
+    mac = info.get("mac", "").upper()
     is_blocked = client_info.get("blocked", False)
-    is_guest = client_info.get("is_guest", False)
-    ip = client_info.get("ip") or client_info.get("last_ip") or ""
+    is_guest = info.get("is_guest", False)
+    ip = info.get("ip") or info.get("last_ip") or ""
+    is_wired = info.get("is_wired", False)
+    conn_type = "Wired" if is_wired else "Wireless"
+
+    # Network and AP info
+    network = info.get("network") or info.get("essid") or info.get("last_connection_network_name") or ""
+    ap_name = info.get("last_uplink_name") or ""
 
     status_data = {
         "name": name,
@@ -382,6 +395,9 @@ def client_status(
         "online": is_online,
         "blocked": is_blocked,
         "guest": is_guest,
+        "type": conn_type,
+        "network": network,
+        "ap": ap_name if not is_wired else None,
     }
 
     if output == OutputFormat.JSON:
@@ -390,25 +406,30 @@ def client_status(
         console.print()
         console.print(f"[bold]Client Status: {name}[/bold]")
         console.print("─" * 40)
-        console.print(f"  [dim]MAC:[/dim]     {mac}")
+        console.print(f"  [dim]MAC:[/dim]      {mac}")
         if ip:
-            console.print(f"  [dim]IP:[/dim]      {ip}")
+            console.print(f"  [dim]IP:[/dim]       {ip}")
+        console.print(f"  [dim]Type:[/dim]     {conn_type}")
+        if network:
+            console.print(f"  [dim]Network:[/dim]  {network}")
+        if ap_name and not is_wired:
+            console.print(f"  [dim]AP:[/dim]       {ap_name}")
 
         # Online status
         if is_online:
-            console.print(f"  [dim]Online:[/dim]  [green]Yes[/green]")
+            console.print(f"  [dim]Online:[/dim]   [green]Yes[/green]")
         else:
-            console.print(f"  [dim]Online:[/dim]  [dim]No[/dim]")
+            console.print(f"  [dim]Online:[/dim]   [dim]No[/dim]")
 
         # Block status
         if is_blocked:
-            console.print(f"  [dim]Blocked:[/dim] [red]Yes[/red]")
+            console.print(f"  [dim]Blocked:[/dim]  [red]Yes[/red]")
         else:
-            console.print(f"  [dim]Blocked:[/dim] [green]No[/green]")
+            console.print(f"  [dim]Blocked:[/dim]  [green]No[/green]")
 
         # Guest status
         if is_guest:
-            console.print(f"  [dim]Guest:[/dim]   Yes")
+            console.print(f"  [dim]Guest:[/dim]    Yes")
 
         console.print()
 
