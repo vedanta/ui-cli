@@ -20,11 +20,11 @@ All commands support: `--output table|json|csv`
 
 ---
 
-## Milestone 2: Local Controller API (PLANNED)
+## Milestone 2: Local Controller API (IN PROGRESS)
 
 Direct connection to UniFi Controller (UDM, Cloud Key, self-hosted) using username/password authentication.
 
-All commands prefixed with `./ui local` to distinguish from cloud API.
+All commands prefixed with `./ui local` (or `./ui lo` shorthand) to distinguish from cloud API.
 
 ### Configuration
 
@@ -38,16 +38,19 @@ UNIFI_CONTROLLER_SITE=default
 UNIFI_CONTROLLER_VERIFY_SSL=false
 ```
 
-### Phase 2.1 - Clients (High Priority)
+### Phase 2.1 - Clients ✅ COMPLETE
 
 | Command | Description |
 |---------|-------------|
-| `./ui local clients list` | List active connected clients |
-| `./ui local clients all` | List all known clients (including offline) |
-| `./ui local clients get <MAC>` | Get details for specific client |
-| `./ui local clients block <MAC>` | Block a client |
-| `./ui local clients unblock <MAC>` | Unblock a client |
-| `./ui local clients kick <MAC>` | Disconnect client (force reconnect) |
+| `./ui lo clients list` | List active connected clients |
+| `./ui lo clients all` | List all known clients (including offline) |
+| `./ui lo clients get <name\|MAC>` | Get details for specific client |
+| `./ui lo clients status <name\|MAC>` | Show comprehensive client status |
+| `./ui lo clients block <name\|MAC>` | Block a client (with confirmation) |
+| `./ui lo clients unblock <name\|MAC>` | Unblock a client (with confirmation) |
+| `./ui lo clients kick <name\|MAC>` | Disconnect client (with confirmation) |
+| `./ui lo clients count` | Count clients by category |
+| `./ui lo clients duplicates` | Find clients with duplicate names |
 
 **Switches for `clients list`:**
 | Switch | Short | Description |
@@ -55,7 +58,26 @@ UNIFI_CONTROLLER_VERIFY_SSL=false
 | `--network` | `-n` | Filter by network/SSID |
 | `--wired` | `-w` | Show only wired clients |
 | `--wireless` | `-W` | Show only wireless clients |
+| `--verbose` | `-v` | Show additional details |
 | `--output` | `-o` | Output format (table/json/csv) |
+
+**Switches for `clients count`:**
+| Switch | Short | Description |
+|--------|-------|-------------|
+| `--by` | `-b` | Group by: type, network, vendor, ap, experience |
+| `--include-offline` | `-a` | Include offline clients in count |
+
+**Switches for `block/unblock/kick`:**
+| Switch | Short | Description |
+|--------|-------|-------------|
+| `--yes` | `-y` | Skip confirmation prompt |
+
+**Features:**
+- Name or MAC address lookup for all client commands
+- Partial name matching with disambiguation
+- Comprehensive status display (signal, experience, speed, data usage, uptime)
+- Multi-NIC device detection in duplicates command
+- Color-coded signal strength and experience scores
 
 ### Phase 2.2 - Monitoring
 
@@ -137,17 +159,17 @@ UNIFI_CONTROLLER_VERIFY_SSL=false
 
 ---
 
-## Files to Add (Milestone 2)
+## Files (Milestone 2)
 
-| File | Purpose |
-|------|---------|
-| `src/ui_cli/local_client.py` | Local controller API client |
-| `src/ui_cli/commands/local/__init__.py` | Local command group |
-| `src/ui_cli/commands/local/clients.py` | Client commands |
-| `src/ui_cli/commands/local/events.py` | Events/alarms commands |
-| `src/ui_cli/commands/local/vouchers.py` | Voucher commands |
-| `src/ui_cli/commands/local/networks.py` | Network commands |
-| `src/ui_cli/commands/local/firewall.py` | Firewall commands |
-| `src/ui_cli/commands/local/dpi.py` | DPI stats commands |
-| `src/ui_cli/commands/local/devices.py` | Local device commands |
-| `src/ui_cli/commands/local/stats.py` | Statistics commands |
+| File | Purpose | Status |
+|------|---------|--------|
+| `src/ui_cli/local_client.py` | Local controller API client | ✅ |
+| `src/ui_cli/commands/local/__init__.py` | Local command group | ✅ |
+| `src/ui_cli/commands/local/clients.py` | Client commands | ✅ |
+| `src/ui_cli/commands/local/events.py` | Events/alarms commands | Planned |
+| `src/ui_cli/commands/local/vouchers.py` | Voucher commands | Planned |
+| `src/ui_cli/commands/local/networks.py` | Network commands | Planned |
+| `src/ui_cli/commands/local/firewall.py` | Firewall commands | Planned |
+| `src/ui_cli/commands/local/dpi.py` | DPI stats commands | Planned |
+| `src/ui_cli/commands/local/devices.py` | Local device commands | Planned |
+| `src/ui_cli/commands/local/stats.py` | Statistics commands | Planned |

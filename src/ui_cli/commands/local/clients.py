@@ -315,6 +315,35 @@ def get_client(
         console.print()
 
 
+def format_bytes(bytes_val: int) -> str:
+    """Format bytes to human-readable string."""
+    if bytes_val < 1024:
+        return f"{bytes_val} B"
+    elif bytes_val < 1024 * 1024:
+        return f"{bytes_val / 1024:.1f} KB"
+    elif bytes_val < 1024 * 1024 * 1024:
+        return f"{bytes_val / (1024 * 1024):.1f} MB"
+    else:
+        return f"{bytes_val / (1024 * 1024 * 1024):.2f} GB"
+
+
+def format_uptime(seconds: int) -> str:
+    """Format uptime seconds to human-readable string."""
+    if seconds < 60:
+        return f"{seconds}s"
+    elif seconds < 3600:
+        minutes = seconds // 60
+        return f"{minutes}m"
+    elif seconds < 86400:
+        hours = seconds // 3600
+        minutes = (seconds % 3600) // 60
+        return f"{hours}h {minutes}m"
+    else:
+        days = seconds // 86400
+        hours = (seconds % 86400) // 3600
+        return f"{days}d {hours}h"
+
+
 @app.command("status")
 def client_status(
     identifier: Annotated[
@@ -388,6 +417,29 @@ def client_status(
     network = info.get("network") or info.get("essid") or info.get("last_connection_network_name") or ""
     ap_name = info.get("last_uplink_name") or ""
 
+    # Wireless-specific info
+    signal = info.get("signal")  # dBm
+    rssi = info.get("rssi")
+    channel = info.get("channel")
+    radio = info.get("radio_proto", "")  # e.g., "ac", "ax"
+
+    # Connection quality
+    satisfaction = info.get("satisfaction")
+
+    # Connection speed
+    tx_rate = info.get("tx_rate", 0)  # in kbps
+    rx_rate = info.get("rx_rate", 0)
+
+    # Data usage
+    tx_bytes = info.get("tx_bytes", 0)
+    rx_bytes = info.get("rx_bytes", 0)
+
+    # Uptime
+    uptime = info.get("uptime", 0)
+
+    # Vendor
+    vendor = info.get("oui", "")
+
     status_data = {
         "name": name,
         "mac": mac,
@@ -398,6 +450,17 @@ def client_status(
         "type": conn_type,
         "network": network,
         "ap": ap_name if not is_wired else None,
+        "signal": signal,
+        "rssi": rssi,
+        "channel": channel,
+        "radio": radio,
+        "satisfaction": satisfaction,
+        "tx_rate": tx_rate,
+        "rx_rate": rx_rate,
+        "tx_bytes": tx_bytes,
+        "rx_bytes": rx_bytes,
+        "uptime": uptime,
+        "vendor": vendor,
     }
 
     if output == OutputFormat.JSON:
@@ -406,30 +469,73 @@ def client_status(
         console.print()
         console.print(f"[bold]Client Status: {name}[/bold]")
         console.print("─" * 40)
-        console.print(f"  [dim]MAC:[/dim]      {mac}")
+        console.print(f"  [dim]MAC:[/dim]       {mac}")
+        if vendor:
+            console.print(f"  [dim]Vendor:[/dim]    {vendor}")
         if ip:
-            console.print(f"  [dim]IP:[/dim]       {ip}")
-        console.print(f"  [dim]Type:[/dim]     {conn_type}")
+            console.print(f"  [dim]IP:[/dim]        {ip}")
+        console.print(f"  [dim]Type:[/dim]      {conn_type}")
         if network:
-            console.print(f"  [dim]Network:[/dim]  {network}")
+            console.print(f"  [dim]Network:[/dim]   {network}")
         if ap_name and not is_wired:
-            console.print(f"  [dim]AP:[/dim]       {ap_name}")
+            console.print(f"  [dim]AP:[/dim]        {ap_name}")
 
-        # Online status
+        # Wireless info section
+        if not is_wired and is_online:
+            console.print()
+            console.print("  [bold]WiFi Info[/bold]")
+            if signal is not None:
+                # Color code signal strength
+                if signal >= -50:
+                    sig_color = "green"
+                elif signal >= -70:
+                    sig_color = "yellow"
+                else:
+                    sig_color = "red"
+                console.print(f"  [dim]Signal:[/dim]    [{sig_color}]{signal} dBm[/{sig_color}]")
+            if channel:
+                channel_info = f"Ch {channel}"
+                if radio:
+                    channel_info += f" ({radio.upper()})"
+                console.print(f"  [dim]Channel:[/dim]   {channel_info}")
+            if satisfaction is not None:
+                # Color code experience
+                if satisfaction >= 80:
+                    exp_color = "green"
+                elif satisfaction >= 50:
+                    exp_color = "yellow"
+                else:
+                    exp_color = "red"
+                console.print(f"  [dim]Experience:[/dim] [{exp_color}]{satisfaction}%[/{exp_color}]")
+
+        # Connection info section (when online)
         if is_online:
-            console.print(f"  [dim]Online:[/dim]   [green]Yes[/green]")
-        else:
-            console.print(f"  [dim]Online:[/dim]   [dim]No[/dim]")
+            console.print()
+            console.print("  [bold]Connection[/bold]")
+            if uptime:
+                console.print(f"  [dim]Uptime:[/dim]    {format_uptime(uptime)}")
+            if tx_rate or rx_rate:
+                tx_str = f"{tx_rate / 1000:.0f}" if tx_rate else "0"
+                rx_str = f"{rx_rate / 1000:.0f}" if rx_rate else "0"
+                console.print(f"  [dim]Speed:[/dim]     ↑{tx_str} / ↓{rx_str} Mbps")
+            if tx_bytes or rx_bytes:
+                console.print(f"  [dim]Data:[/dim]      ↑{format_bytes(tx_bytes)} / ↓{format_bytes(rx_bytes)}")
 
-        # Block status
+        # Status section
+        console.print()
+        console.print("  [bold]Status[/bold]")
+        if is_online:
+            console.print(f"  [dim]Online:[/dim]    [green]Yes[/green]")
+        else:
+            console.print(f"  [dim]Online:[/dim]    [dim]No[/dim]")
+
         if is_blocked:
-            console.print(f"  [dim]Blocked:[/dim]  [red]Yes[/red]")
+            console.print(f"  [dim]Blocked:[/dim]   [red]Yes[/red]")
         else:
-            console.print(f"  [dim]Blocked:[/dim]  [green]No[/green]")
+            console.print(f"  [dim]Blocked:[/dim]   [green]No[/green]")
 
-        # Guest status
         if is_guest:
-            console.print(f"  [dim]Guest:[/dim]    Yes")
+            console.print(f"  [dim]Guest:[/dim]     Yes")
 
         console.print()
 
@@ -715,3 +821,94 @@ def count_clients(
         output_csv(rows, [("group", group_header), ("count", "Count")])
     else:
         output_count_table(counts, group_header=group_header, title=title)
+
+
+@app.command("duplicates")
+def find_duplicates(
+    output: Annotated[
+        OutputFormat,
+        typer.Option("--output", "-o", help="Output format"),
+    ] = OutputFormat.TABLE,
+) -> None:
+    """Find clients with duplicate names.
+
+    Searches all known clients (including offline) for duplicate names.
+    This can indicate:
+    - Same device with multiple NICs (WiFi + Ethernet)
+    - Different devices that happen to share a name
+
+    Shows connection type (wired/wireless) to help distinguish.
+    """
+    try:
+        api_client = UniFiLocalClient()
+        clients = asyncio.run(api_client.list_all_clients())
+    except Exception as e:
+        handle_error(e)
+        return
+
+    # Group clients by name
+    by_name: dict[str, list[dict]] = {}
+    for client in clients:
+        name = client.get("name") or client.get("hostname") or ""
+        if not name:
+            continue
+        name_lower = name.lower()
+        if name_lower not in by_name:
+            by_name[name_lower] = []
+        by_name[name_lower].append(client)
+
+    # Find duplicates (names with more than one client)
+    duplicates = {name: clients for name, clients in by_name.items() if len(clients) > 1}
+
+    if not duplicates:
+        console.print("[green]No duplicate client names found.[/green]")
+        return
+
+    if output == OutputFormat.JSON:
+        # Format for JSON output
+        result = []
+        for name, clients in sorted(duplicates.items()):
+            # Determine if likely multi-NIC (has both wired and wireless)
+            has_wired = any(c.get("is_wired", False) for c in clients)
+            has_wireless = any(not c.get("is_wired", False) for c in clients)
+            likely_multi_nic = has_wired and has_wireless
+
+            for client in clients:
+                is_wired = client.get("is_wired", False)
+                result.append({
+                    "name": client.get("name") or client.get("hostname"),
+                    "mac": client.get("mac", "").upper(),
+                    "ip": client.get("ip") or client.get("last_ip") or "",
+                    "type": "wired" if is_wired else "wireless",
+                    "vendor": client.get("oui", ""),
+                    "likely_multi_nic": likely_multi_nic,
+                })
+        output_json(result)
+    else:
+        # Table output grouped by name
+        console.print()
+        console.print(f"[bold]Found {len(duplicates)} duplicate name(s):[/bold]")
+        console.print()
+
+        for name, clients in sorted(duplicates.items()):
+            display_name = clients[0].get("name") or clients[0].get("hostname")
+
+            # Check if likely multi-NIC device
+            has_wired = any(c.get("is_wired", False) for c in clients)
+            has_wireless = any(not c.get("is_wired", False) for c in clients)
+            likely_multi_nic = has_wired and has_wireless
+
+            if likely_multi_nic:
+                console.print(f"[yellow]{display_name}[/yellow] ({len(clients)} NICs) [dim]← likely same device[/dim]")
+            else:
+                console.print(f"[yellow]{display_name}[/yellow] ({len(clients)} clients)")
+
+            for client in clients:
+                mac = client.get("mac", "").upper()
+                ip = client.get("ip") or client.get("last_ip") or "no IP"
+                is_wired = client.get("is_wired", False)
+                conn_type = "[blue]wired[/blue]" if is_wired else "[cyan]wifi[/cyan]"
+                vendor = client.get("oui", "")
+                vendor_str = f" - {vendor}" if vendor else ""
+                console.print(f"  • {mac} ({ip}) {conn_type}{vendor_str}")
+            console.print()

@@ -1,14 +1,30 @@
 # UniFi CLI
 
+<p align="center">
+  <img src="art/uicli.png" alt="UI-CLI" width="400">
+</p>
+
 A command-line interface for the [UniFi Site Manager API](https://developer.ui.com/site-manager-api/gettingstarted). Manage your UniFi infrastructure from the terminal.
+
+> **New to UI-CLI?** Check out the [User Guide](USERGUIDE.md) for detailed instructions and examples.
 
 ## Features
 
+**Site Manager API (Cloud)**
 - List and inspect hosts, sites, and devices
 - View ISP performance metrics
 - Manage SD-WAN configurations
-- Multiple output formats (table, JSON, CSV)
 - Check API connectivity and authentication status
+
+**Local Controller API (Direct)**
+- Manage connected clients (list, block, kick)
+- View detailed client status (signal, speed, data usage)
+- Count clients by network, vendor, AP, or experience
+- Find duplicate client names and multi-NIC devices
+
+**General**
+- Multiple output formats (table, JSON, CSV)
+- Works with UDM, Cloud Key, and self-hosted controllers
 
 ## Table of Contents
 
@@ -18,6 +34,8 @@ A command-line interface for the [UniFi Site Manager API](https://developer.ui.c
 - [Command Reference](#command-reference)
 - [Output Formats](#output-formats)
 - [Examples](#examples)
+- [Local Controller Commands](#local-controller-commands)
+- [User Guide](USERGUIDE.md) - Comprehensive documentation
 - [Roadmap](#roadmap)
 - [License](#license)
 
@@ -356,6 +374,93 @@ fi
 
 ---
 
+## Local Controller Commands
+
+Direct connection to your UniFi Controller (UDM, Cloud Key, self-hosted) for local network management.
+
+### Configuration
+
+Add to your `.env` file:
+
+```bash
+# Local Controller
+UNIFI_CONTROLLER_URL=https://192.168.1.1
+UNIFI_CONTROLLER_USERNAME=admin
+UNIFI_CONTROLLER_PASSWORD=yourpassword
+UNIFI_CONTROLLER_SITE=default
+UNIFI_CONTROLLER_VERIFY_SSL=false
+```
+
+### Local Clients
+
+Manage connected clients on your local network. Use `./ui local` or `./ui lo` (shorthand).
+
+```bash
+# List active (connected) clients
+./ui lo clients list
+./ui lo clients list --wired          # Wired only
+./ui lo clients list --wireless       # Wireless only
+./ui lo clients list -n "Guest"       # Filter by network
+
+# List all known clients (including offline)
+./ui lo clients all
+
+# Get client details (by name or MAC)
+./ui lo clients get my-iPhone
+./ui lo clients get AA:BB:CC:DD:EE:FF
+
+# Get detailed client status
+./ui lo clients status my-iPhone
+
+# Client actions (with confirmation)
+./ui lo clients block my-iPhone       # Block client
+./ui lo clients unblock my-iPhone     # Unblock client
+./ui lo clients kick my-iPhone        # Disconnect client
+./ui lo clients block my-iPhone -y    # Skip confirmation
+
+# Count clients by category
+./ui lo clients count                 # By type (wired/wireless)
+./ui lo clients count --by network    # By network/SSID
+./ui lo clients count --by vendor     # By manufacturer
+./ui lo clients count --by ap         # By access point
+./ui lo clients count --by experience # By WiFi experience
+./ui lo clients count -a              # Include offline clients
+
+# Find duplicate client names
+./ui lo clients duplicates            # Shows multi-NIC devices
+```
+
+### Client Status Output
+
+The `status` command shows comprehensive client information:
+
+```
+Client Status: my-MacBook
+────────────────────────────────────────
+  MAC:       AA:BB:CC:DD:EE:FF
+  Vendor:    Apple, Inc.
+  IP:        10.0.1.50
+  Type:      Wireless
+  Network:   Home
+  AP:        Living Room AP
+
+  WiFi Info
+  Signal:    -52 dBm
+  Channel:   Ch 36 (AC)
+  Experience: 98%
+
+  Connection
+  Uptime:    2d 5h
+  Speed:     ↑866 / ↓866 Mbps
+  Data:      ↑1.2 GB / ↓15.8 GB
+
+  Status
+  Online:    Yes
+  Blocked:   No
+```
+
+---
+
 ## Roadmap
 
 See [ROADMAP.md](ROADMAP.md) for planned features.
@@ -367,14 +472,15 @@ See [ROADMAP.md](ROADMAP.md) for planned features.
 - SD-WAN configuration
 - Status command
 
-### Milestone 2: Local Controller API (Planned)
+### Milestone 2: Local Controller API (In Progress)
 
-- Connected clients listing
-- Voucher/guest management
-- Events and alarms
-- Network configuration
-- Firewall rules
-- DPI statistics
+- [x] Phase 2.1: Client management (list, status, block, kick, count, duplicates)
+- [ ] Phase 2.2: Monitoring (events, alarms, health)
+- [ ] Phase 2.3: Guest management (vouchers)
+- [ ] Phase 2.4: Network info (networks, DPI)
+- [ ] Phase 2.5: Security (firewall, port forwarding)
+- [ ] Phase 2.6: Device commands (restart, upgrade, locate)
+- [ ] Phase 2.7: Statistics
 
 ---
 
