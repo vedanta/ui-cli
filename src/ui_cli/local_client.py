@@ -391,6 +391,42 @@ class UniFiLocalClient:
         response = await self.get("/stat/device")
         return response.get("data", [])
 
+    async def get_device(self, mac: str) -> dict[str, Any] | None:
+        """Get a specific device by MAC address."""
+        mac = mac.lower().replace("-", ":")
+        devices = await self.get_devices()
+        for device in devices:
+            if device.get("mac", "").lower() == mac:
+                return device
+        return None
+
+    async def restart_device(self, mac: str) -> bool:
+        """Restart/reboot a device."""
+        mac = mac.lower().replace("-", ":")
+        response = await self.post("/cmd/devmgr", data={"cmd": "restart", "mac": mac})
+        return response.get("meta", {}).get("rc") == "ok"
+
+    async def upgrade_device(self, mac: str) -> bool:
+        """Upgrade device firmware."""
+        mac = mac.lower().replace("-", ":")
+        response = await self.post("/cmd/devmgr", data={"cmd": "upgrade", "mac": mac})
+        return response.get("meta", {}).get("rc") == "ok"
+
+    async def locate_device(self, mac: str, enabled: bool = True) -> bool:
+        """Enable/disable locate LED on device."""
+        mac = mac.lower().replace("-", ":")
+        response = await self.post(
+            "/cmd/devmgr",
+            data={"cmd": "set-locate", "mac": mac, "locate_enable": enabled},
+        )
+        return response.get("meta", {}).get("rc") == "ok"
+
+    async def adopt_device(self, mac: str) -> bool:
+        """Adopt a device."""
+        mac = mac.lower().replace("-", ":")
+        response = await self.post("/cmd/devmgr", data={"cmd": "adopt", "mac": mac})
+        return response.get("meta", {}).get("rc") == "ok"
+
     async def get_dhcp_reservations(self) -> list[dict[str, Any]]:
         """Get DHCP reservations (clients with fixed IPs)."""
         # Fixed IPs are stored in user records with use_fixedip=True
@@ -435,3 +471,127 @@ class UniFiLocalClient:
         await safe_fetch("routing", self.get_routing)
 
         return config
+
+    # ========== Monitoring ==========
+
+    async def get_events(self, limit: int = 50) -> list[dict[str, Any]]:
+        """Get recent events."""
+        response = await self.post("/stat/event", data={"_limit": limit, "_sort": "-time"})
+        return response.get("data", [])
+
+    async def get_alarms(self, archived: bool = False) -> list[dict[str, Any]]:
+        """Get alarms. Set archived=True to include archived alarms."""
+        response = await self.get("/stat/alarm")
+        alarms = response.get("data", [])
+        if not archived:
+            alarms = [a for a in alarms if not a.get("archived", False)]
+        return alarms
+
+    async def archive_alarm(self, alarm_id: str) -> bool:
+        """Archive an alarm by ID."""
+        response = await self.post(
+            "/cmd/evtmgr", data={"cmd": "archive-alarm", "_id": alarm_id}
+        )
+        return response.get("meta", {}).get("rc") == "ok"
+
+    async def get_health(self) -> list[dict[str, Any]]:
+        """Get site health information."""
+        response = await self.get("/stat/health")
+        return response.get("data", [])
+
+    # ========== Vouchers ==========
+
+    async def get_vouchers(self) -> list[dict[str, Any]]:
+        """Get all vouchers."""
+        response = await self.get("/stat/voucher")
+        return response.get("data", [])
+
+    async def create_voucher(
+        self,
+        count: int = 1,
+        duration: int = 1440,  # minutes (24h default)
+        quota: int = 0,  # MB (0 = unlimited)
+        up_limit: int = 0,  # kbps (0 = unlimited)
+        down_limit: int = 0,  # kbps (0 = unlimited)
+        multi_use: int = 1,  # number of uses
+        note: str | None = None,
+    ) -> list[dict[str, Any]]:
+        """Create voucher(s).
+
+        Args:
+            count: Number of vouchers to create
+            duration: Duration in minutes
+            quota: Data quota in MB (0 = unlimited)
+            up_limit: Upload limit in kbps (0 = unlimited)
+            down_limit: Download limit in kbps (0 = unlimited)
+            multi_use: Number of uses per voucher
+            note: Optional note/description
+
+        Returns:
+            List of created voucher data
+        """
+        data: dict[str, Any] = {
+            "cmd": "create-voucher",
+            "n": count,
+            "expire": duration,
+            "quota": multi_use,  # quota field is actually multi-use count
+        }
+
+        if quota > 0:
+            data["bytes"] = quota  # MB
+
+        if up_limit > 0:
+            data["up"] = up_limit
+
+        if down_limit > 0:
+            data["down"] = down_limit
+
+        if note:
+            data["note"] = note
+
+        response = await self.post("/cmd/hotspot", data=data)
+        return response.get("data", [])
+
+    async def revoke_voucher(self, voucher_id: str) -> bool:
+        """Revoke/delete a voucher by ID."""
+        response = await self.post(
+            "/cmd/hotspot", data={"cmd": "delete-voucher", "_id": voucher_id}
+        )
+        return response.get("meta", {}).get("rc") == "ok"
+
+    # ========== DPI (Deep Packet Inspection) ==========
+
+    async def get_site_dpi(self) -> list[dict[str, Any]]:
+        """Get site-level DPI statistics."""
+        response = await self.get("/stat/sitedpi")
+        return response.get("data", [])
+
+    async def get_client_dpi(self, mac: str) -> list[dict[str, Any]]:
+        """Get DPI statistics for a specific client."""
+        mac = mac.lower().replace("-", ":")
+        response = await self.get(f"/stat/stadpi/{mac}")
+        return response.get("data", [])
+
+    # ========== Statistics ==========
+
+    async def get_daily_stats(self, days: int = 30) -> list[dict[str, Any]]:
+        """Get daily site statistics."""
+        response = await self.post(
+            "/stat/report/daily.site",
+            data={
+                "attrs": ["time", "rx_bytes", "tx_bytes", "num_sta", "wan-rx_bytes", "wan-tx_bytes"],
+                "n": days,
+            },
+        )
+        return response.get("data", [])
+
+    async def get_hourly_stats(self, hours: int = 24) -> list[dict[str, Any]]:
+        """Get hourly site statistics."""
+        response = await self.post(
+            "/stat/report/hourly.site",
+            data={
+                "attrs": ["time", "rx_bytes", "tx_bytes", "num_sta", "wan-rx_bytes", "wan-tx_bytes"],
+                "n": hours,
+            },
+        )
+        return response.get("data", [])
