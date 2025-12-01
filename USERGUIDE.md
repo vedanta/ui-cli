@@ -9,7 +9,6 @@ Complete reference for managing UniFi networks from the command line.
 - [Setup](#setup)
 - [Cloud API](#cloud-api)
 - [Local Controller](#local-controller)
-- [Running Config](#running-config)
 - [Output Formats](#output-formats)
 - [Quick Reference](#quick-reference)
 - [Troubleshooting](#troubleshooting)
@@ -137,7 +136,9 @@ APs, switches, gateways, cameras.
 
 Direct connection to your controller. Use `./ui local` or `./ui lo`.
 
-### List Clients
+### Clients
+
+#### List Clients
 
 ```bash
 ./ui lo clients list             # Connected clients
@@ -148,18 +149,7 @@ Direct connection to your controller. Use `./ui local` or `./ui lo`.
 ./ui lo clients all              # Include offline
 ```
 
-**Output:**
-```
-                         Connected Clients
-┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━┓
-┃ Name         ┃ MAC               ┃ IP         ┃ Network ┃ Type     ┃
-┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━┩
-│ my-MacBook   │ AA:BB:CC:DD:EE:FF │ 10.0.1.50  │ Home    │ Wireless │
-│ Smart-TV     │ 11:22:33:44:55:66 │ 10.0.1.100 │ Home    │ Wired    │
-└──────────────┴───────────────────┴────────────┴─────────┴──────────┘
-```
-
-### Client Details
+#### Client Details
 
 ```bash
 ./ui lo clients get my-MacBook         # By name
@@ -194,13 +184,7 @@ Client Status: my-MacBook
   Blocked:   No
 ```
 
-| Field | Meaning |
-|-------|---------|
-| Signal | dBm (green >-50, yellow -50 to -70, red <-70) |
-| Channel | WiFi channel + protocol (AC=WiFi 5, AX=WiFi 6) |
-| Experience | UniFi satisfaction (green >80%, yellow 50-80%, red <50%) |
-
-### Client Actions
+#### Client Actions
 
 ```bash
 ./ui lo clients block my-MacBook      # Block (with confirmation)
@@ -209,7 +193,7 @@ Client Status: my-MacBook
 ./ui lo clients block my-MacBook -y   # Skip confirmation
 ```
 
-### Client Statistics
+#### Client Statistics
 
 ```bash
 ./ui lo clients count                 # By type
@@ -220,34 +204,172 @@ Client Status: my-MacBook
 ./ui lo clients count -a              # Include offline
 ```
 
-### Find Duplicates
-
-Identifies devices with multiple NICs or naming conflicts.
+#### Find Duplicates
 
 ```bash
 ./ui lo clients duplicates
 ```
 
+---
+
+### Health & Monitoring
+
+#### Site Health
+
+```bash
+./ui lo health                   # Health summary
+./ui lo health -v                # Verbose details
 ```
-Found 2 duplicate name(s):
 
-my-MacBook (2 NICs) ← likely same device
-  • AA:BB:CC:DD:EE:FF (10.0.1.50) wifi - Apple, Inc.
-  • 11:22:33:44:55:66 (10.0.1.51) wired - Apple, Inc.
+Shows status of WAN, LAN, WLAN, and VPN subsystems.
 
-iPad (3 clients)
-  • 22:33:44:55:66:77 (10.0.1.60) wifi - Apple, Inc.
-  • 33:44:55:66:77:88 (10.0.1.61) wifi - Apple, Inc.
-  • 44:55:66:77:88:99 (10.0.1.62) wifi - Apple, Inc.
+#### Events
+
+```bash
+./ui lo events list              # Recent events
+./ui lo events list -l 50        # Last 50 events
+./ui lo events list -v           # Verbose
 ```
 
 ---
 
-## Running Config
+### Networks
 
-Export your network configuration for backup, documentation, or version control.
+```bash
+./ui lo networks list            # All networks
+./ui lo networks list -v         # With details (DHCP, VLAN)
+```
 
-### Full Config
+---
+
+### Devices (Local)
+
+#### List & Get
+
+```bash
+./ui lo devices list                      # All devices
+./ui lo devices list -v                   # Verbose (channels, load)
+./ui lo devices get UDM-Pro               # By name
+./ui lo devices get 70:a7:41:xx:xx:xx     # By MAC
+./ui lo devices get device-001            # By ID
+```
+
+#### Device Actions
+
+```bash
+./ui lo devices restart UDM-Pro           # Restart device
+./ui lo devices restart UDM-Pro -y        # Skip confirmation
+./ui lo devices upgrade Living-Room-AP    # Upgrade firmware
+./ui lo devices locate Office-AP          # Enable locate LED
+./ui lo devices locate Office-AP --off    # Disable locate LED
+./ui lo devices adopt 70:a7:41:xx:xx:xx   # Adopt new device
+```
+
+---
+
+### Firewall & Security
+
+#### Firewall Rules
+
+```bash
+./ui lo firewall list                     # All rules
+./ui lo firewall list --ruleset WAN_IN    # Filter by ruleset
+./ui lo firewall list -v                  # Verbose
+```
+
+#### Firewall Groups
+
+```bash
+./ui lo firewall groups                   # Address/port groups
+./ui lo firewall groups -v                # Show group members
+```
+
+#### Port Forwarding
+
+```bash
+./ui lo portfwd list                      # All port forwards
+./ui lo portfwd list -v                   # Verbose
+```
+
+---
+
+### Guest Vouchers
+
+#### List Vouchers
+
+```bash
+./ui lo vouchers list                     # All vouchers
+./ui lo vouchers list -v                  # With details
+```
+
+#### Create Vouchers
+
+```bash
+./ui lo vouchers create                   # Single voucher, 24h
+./ui lo vouchers create -c 10             # Create 10 vouchers
+./ui lo vouchers create -d 60             # 60 minute duration
+./ui lo vouchers create -q 1024           # 1GB data limit
+./ui lo vouchers create --up 5000         # 5Mbps upload limit
+./ui lo vouchers create --down 10000      # 10Mbps download limit
+./ui lo vouchers create -n "Event"        # Add note
+```
+
+#### Delete Vouchers
+
+```bash
+./ui lo vouchers delete 12345-67890       # Delete by code
+./ui lo vouchers delete 12345-67890 -y    # Skip confirmation
+```
+
+---
+
+### DPI (Deep Packet Inspection)
+
+#### Site DPI Stats
+
+```bash
+./ui lo dpi stats                         # Top applications
+./ui lo dpi stats -l 20                   # Top 20
+./ui lo dpi stats -v                      # Verbose
+```
+
+#### Client DPI
+
+```bash
+./ui lo dpi client my-MacBook             # By name
+./ui lo dpi client AA:BB:CC:DD:EE:FF      # By MAC
+```
+
+**Note:** DPI must be enabled in your controller settings. If disabled, the command will show an unavailable message.
+
+---
+
+### Statistics
+
+#### Daily Stats
+
+```bash
+./ui lo stats daily                       # Last 30 days
+./ui lo stats daily --days 7              # Last 7 days
+./ui lo stats daily -o csv                # Export to CSV
+```
+
+#### Hourly Stats
+
+```bash
+./ui lo stats hourly                      # Last 24 hours
+./ui lo stats hourly --hours 48           # Last 48 hours
+```
+
+**Fields:** Date, WAN RX/TX, client count
+
+---
+
+### Running Config
+
+Export your network configuration for backup or documentation.
+
+#### Full Config
 
 ```bash
 ./ui lo config show              # All sections, table format
@@ -257,7 +379,7 @@ Export your network configuration for backup, documentation, or version control.
 ./ui lo config show --show-secrets  # Include passwords
 ```
 
-### Specific Sections
+#### Specific Sections
 
 ```bash
 ./ui lo config show -s networks      # VLANs, subnets, DHCP
@@ -269,68 +391,7 @@ Export your network configuration for backup, documentation, or version control.
 ./ui lo config show -s routing       # Static routes
 ```
 
-### Example Output
-
-```
-UniFi Running Configuration
-══════════════════════════════════════════════════════════════════════
-Controller: https://192.168.1.1
-Site: default
-Exported: 2024-11-30 10:45:23
-══════════════════════════════════════════════════════════════════════
-
-┌─ NETWORKS ──────────────────────────────────────────────────────────┐
-
-  Default
-    Purpose:       corporate
-    Subnet:        10.0.1.0/24
-    Gateway:       10.0.1.1
-    DHCP:          Enabled (10.0.1.100 - 10.0.1.254)
-    DNS:           10.0.1.1, 1.1.1.1
-
-  IoT (VLAN 20)
-    Purpose:       iot
-    Subnet:        10.0.20.0/24
-    Isolation:     Yes
-
-└──────────────────────────────────────────────────────────────────────┘
-
-┌─ WIRELESS ──────────────────────────────────────────────────────────┐
-
-  HomeWiFi
-    Network:       Default
-    Security:      WPA2/WPA3 Personal
-    Band:          2.4 GHz + 5 GHz
-    PMF:           optional
-
-  IoT-Network
-    Network:       IoT
-    Security:      WPA2 Personal
-    Band:          2.4 GHz only
-    Hidden:        Yes
-
-└──────────────────────────────────────────────────────────────────────┘
-
-┌─ DEVICES ───────────────────────────────────────────────────────────┐
-
-  UDM-SE (Gateway) online
-    IP:            192.168.1.1
-    MAC:           AA:BB:CC:DD:EE:01
-    Firmware:      4.0.6
-    Uptime:        45d 12h
-
-  Living-Room-AP (U6-Pro) online
-    IP:            10.0.1.10
-    Firmware:      6.6.55
-    Channel 2.4G:  6 (HT40)
-    Channel 5G:    36 (VHT80)
-
-└──────────────────────────────────────────────────────────────────────┘
-
-Summary: 2 networks, 2 SSIDs, 0 firewall rules, 2 devices
-```
-
-### Backup to YAML
+#### Backup to YAML
 
 ```bash
 ./ui lo config show -o yaml > backup-$(date +%Y%m%d).yaml
@@ -393,16 +454,25 @@ All commands support multiple formats via `-o`:
 
 | Command | Description |
 |---------|-------------|
+| `./ui lo health` | Site health status |
 | `./ui lo clients list` | Connected clients |
-| `./ui lo clients all` | All clients (inc. offline) |
 | `./ui lo clients get NAME` | Client details |
 | `./ui lo clients status NAME` | Full client status |
 | `./ui lo clients block NAME` | Block client |
-| `./ui lo clients kick NAME` | Disconnect client |
-| `./ui lo clients count --by X` | Count by type/network/vendor/ap |
-| `./ui lo clients duplicates` | Find duplicate names |
+| `./ui lo clients count --by X` | Count by type/network/vendor |
+| `./ui lo devices list` | Network devices |
+| `./ui lo devices restart NAME` | Restart device |
+| `./ui lo devices locate NAME` | Toggle locate LED |
+| `./ui lo networks list` | Networks/VLANs |
+| `./ui lo events list` | Recent events |
+| `./ui lo firewall list` | Firewall rules |
+| `./ui lo portfwd list` | Port forwards |
+| `./ui lo vouchers list` | Guest vouchers |
+| `./ui lo vouchers create` | Create voucher |
+| `./ui lo dpi stats` | DPI statistics |
+| `./ui lo stats daily` | Daily traffic stats |
+| `./ui lo stats hourly` | Hourly traffic stats |
 | `./ui lo config show` | Running configuration |
-| `./ui lo config show -s X` | Specific section |
 
 ### Common Options
 
@@ -427,12 +497,14 @@ All commands support multiple formats via `-o`:
 | SSL certificate verify failed | Set `UNIFI_CONTROLLER_VERIFY_SSL=false` |
 | Client not found | Try partial name or use MAC address |
 | Session expired | Delete `~/.config/ui-cli/session.json` |
+| DPI unavailable | Enable DPI in controller settings |
 
 ### Get Help
 
 ```bash
 ./ui --help                    # All commands
 ./ui devices --help            # Device commands
+./ui lo --help                 # Local commands
 ./ui lo clients --help         # Client commands
 ./ui lo config show --help     # Config options
 ```
