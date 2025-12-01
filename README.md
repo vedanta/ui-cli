@@ -307,103 +307,124 @@ ui --help            # After pip install
 
 ## Command Reference
 
-```mermaid
-flowchart TD
-    UI[./ui] --> status[status]
-    UI --> version[version]
-    UI --> speedtest[speedtest]
-    UI --> hosts[hosts]
-    UI --> sites[sites]
-    UI --> devices[devices]
-    UI --> isp[isp]
-    UI --> sdwan[sdwan]
-    UI --> local[local / lo]
-
-    %% Cloud API commands
-    hosts --> hosts_list[list]
-    hosts --> hosts_get[get]
-
-    sites --> sites_list[list]
-
-    devices --> devices_list[list]
-    devices --> devices_count[count]
-
-    isp --> isp_metrics[metrics]
-
-    sdwan --> sdwan_list[list]
-    sdwan --> sdwan_get[get]
-    sdwan --> sdwan_status[status]
-
-    %% Local API commands
-    local --> clients[clients]
-    local --> lo_devices[devices]
-    local --> networks[networks]
-    local --> events[events]
-    local --> health[health]
-    local --> firewall[firewall]
-    local --> portfwd[portfwd]
-    local --> vouchers[vouchers]
-    local --> dpi[dpi]
-    local --> stats[stats]
-    local --> config[config]
-
-    clients --> cl_list[list]
-    clients --> cl_all[all]
-    clients --> cl_get[get]
-    clients --> cl_status[status]
-    clients --> cl_block[block]
-    clients --> cl_unblock[unblock]
-    clients --> cl_kick[kick]
-    clients --> cl_count[count]
-    clients --> cl_dup[duplicates]
-
-    lo_devices --> ld_list[list]
-    lo_devices --> ld_get[get]
-    lo_devices --> ld_restart[restart]
-    lo_devices --> ld_upgrade[upgrade]
-    lo_devices --> ld_locate[locate]
-    lo_devices --> ld_adopt[adopt]
-
-    networks --> net_list[list]
-    networks --> net_get[get]
-
-    events --> ev_list[list]
-
-    firewall --> fw_list[list]
-    firewall --> fw_groups[groups]
-
-    portfwd --> pf_list[list]
-
-    vouchers --> v_list[list]
-    vouchers --> v_create[create]
-    vouchers --> v_delete[delete]
-
-    dpi --> dpi_stats[stats]
-    dpi --> dpi_client[client]
-
-    stats --> st_daily[daily]
-    stats --> st_hourly[hourly]
-
-    config --> cfg_show[show]
-
-    %% Styling
-    classDef cloud fill:#e1f5fe,stroke:#01579b
-    classDef local fill:#e8f5e9,stroke:#2e7d32
-    classDef standalone fill:#fff3e0,stroke:#ef6c00
-
-    class status,version,speedtest standalone
-    class hosts,sites,devices,isp,sdwan,hosts_list,hosts_get,sites_list,devices_list,devices_count,isp_metrics,sdwan_list,sdwan_get,sdwan_status cloud
-    class local,clients,lo_devices,networks,events,health,firewall,portfwd,vouchers,dpi,stats,config local
-    class cl_list,cl_all,cl_get,cl_status,cl_block,cl_unblock,cl_kick,cl_count,cl_dup local
-    class ld_list,ld_get,ld_restart,ld_upgrade,ld_locate,ld_adopt local
-    class net_list,net_get,ev_list,fw_list,fw_groups,pf_list local
-    class v_list,v_create,v_delete,dpi_stats,dpi_client,st_daily,st_hourly,cfg_show local
+```
+./ui
+├── status              # Check API connection
+├── version             # Show CLI version
+├── speedtest           # Run speedtest on gateway
+├── hosts               # Cloud: manage controllers
+├── sites               # Cloud: manage sites
+├── devices             # Cloud: manage devices
+├── isp                 # Cloud: ISP metrics
+├── sdwan               # Cloud: SD-WAN configs
+└── local (lo)          # Local controller commands
 ```
 
-**Legend:**
-- 🟦 **Blue** - Cloud API commands (via `api.ui.com`)
-- 🟩 **Green** - Local Controller commands (direct connection)
-- 🟧 **Orange** - Standalone commands
+<details>
+<summary><strong>Cloud API Commands</strong> (click to expand)</summary>
+
+```
+./ui hosts
+├── list                # List all controllers
+└── get <ID>            # Get controller details
+
+./ui sites
+└── list                # List all sites
+
+./ui devices
+├── list                # List all devices
+│   ├── --host <ID>     # Filter by controller
+│   └── --verbose       # Show details
+└── count               # Count devices
+    └── --by <field>    # Group by model/status/host
+
+./ui isp
+└── metrics             # ISP performance metrics
+    ├── --interval      # 5m, 1h (default: 1h)
+    └── --hours         # Time range (default: 168)
+
+./ui sdwan
+├── list                # List SD-WAN configs
+├── get <ID>            # Get config details
+└── status <ID>         # Deployment status
+```
+
+</details>
+
+<details>
+<summary><strong>Local Controller Commands</strong> (click to expand)</summary>
+
+```
+./ui lo clients
+├── list                # Connected clients
+│   ├── -w              # Wired only
+│   ├── -W              # Wireless only
+│   └── -n <network>    # Filter by network
+├── all                 # All clients (inc. offline)
+├── get <name|MAC>      # Client details
+├── status <name|MAC>   # Full client status
+├── block <name|MAC>    # Block client
+├── unblock <name|MAC>  # Unblock client
+├── kick <name|MAC>     # Disconnect client
+├── count               # Count by category
+│   └── --by <field>    # type/network/vendor/ap
+└── duplicates          # Find duplicate names
+
+./ui lo devices
+├── list                # List network devices
+├── get <ID|MAC|name>   # Device details
+├── restart <device>    # Restart device
+├── upgrade <device>    # Upgrade firmware
+├── locate <device>     # Toggle locate LED
+│   └── --off           # Turn off LED
+└── adopt <MAC>         # Adopt new device
+
+./ui lo networks
+├── list                # List networks/VLANs
+└── get <ID>            # Network details
+
+./ui lo firewall
+├── list                # List firewall rules
+│   └── --ruleset       # Filter by ruleset
+└── groups              # List address/port groups
+
+./ui lo portfwd
+└── list                # List port forwards
+
+./ui lo vouchers
+├── list                # List guest vouchers
+├── create              # Create voucher(s)
+│   ├── -c <count>      # Number to create
+│   ├── -d <minutes>    # Duration
+│   ├── -q <MB>         # Data quota
+│   ├── --up <kbps>     # Upload limit
+│   └── --down <kbps>   # Download limit
+└── delete <code>       # Delete voucher
+
+./ui lo dpi
+├── stats               # Site DPI statistics
+└── client <name|MAC>   # Per-client DPI
+
+./ui lo stats
+├── daily               # Daily traffic stats
+│   └── --days <n>      # Number of days
+└── hourly              # Hourly traffic stats
+    └── --hours <n>     # Number of hours
+
+./ui lo events
+└── list                # Recent events
+    └── -l <limit>      # Number of events
+
+./ui lo health          # Site health summary
+
+./ui lo config
+└── show                # Export running config
+    ├── -o <format>     # table/json/yaml
+    ├── -s <section>    # networks/wireless/firewall/devices
+    └── --show-secrets  # Include passwords
+```
+
+</details>
 
 ---
 
