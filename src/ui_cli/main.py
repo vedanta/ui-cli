@@ -3,7 +3,7 @@
 import typer
 
 from ui_cli import __version__
-from ui_cli.commands import devices, hosts, isp, sdwan, sites, status, version
+from ui_cli.commands import devices, hosts, isp, sdwan, sites, speedtest, status, version
 from ui_cli.commands import local
 
 # Create main app
@@ -22,6 +22,7 @@ app.add_typer(devices.app, name="devices")
 app.add_typer(isp.app, name="isp")
 app.add_typer(sdwan.app, name="sdwan")
 app.add_typer(version.app, name="version")
+app.add_typer(speedtest.app, name="speedtest")
 
 # Local controller commands (with alias)
 app.add_typer(local.app, name="local")

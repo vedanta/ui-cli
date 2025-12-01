@@ -9,6 +9,12 @@ import typer
 
 from ui_cli import __version__
 from ui_cli.config import settings
+from ui_cli.local_client import (
+    LocalAPIError,
+    LocalAuthenticationError,
+    LocalConnectionError,
+    UniFiLocalClient,
+)
 from ui_cli.output import OutputFormat, console, output_json
 
 
@@ -115,9 +121,71 @@ async def check_site_manager_api(verbose: bool = False) -> dict:
     return result
 
 
-def print_status_table(status: dict) -> None:
+async def check_local_controller(verbose: bool = False) -> dict:
+    """Check Local Controller connectivity and auth."""
+    result = {
+        "name": "Local Controller",
+        "url": settings.controller_url or "(not configured)",
+        "username": settings.controller_username or "(not configured)",
+        "site": settings.controller_site or "default",
+        "configured": bool(settings.controller_url and settings.controller_username),
+        "connection": None,
+        "connection_time_ms": None,
+        "authentication": None,
+        "error": None,
+        "controller_type": None,
+        "clients_count": None,
+        "devices_count": None,
+    }
+
+    if not settings.controller_url:
+        result["error"] = "Set UNIFI_CONTROLLER_URL in .env file"
+        return result
+
+    if not settings.controller_username or not settings.controller_password:
+        result["error"] = "Set UNIFI_CONTROLLER_USERNAME and UNIFI_CONTROLLER_PASSWORD in .env file"
+        return result
+
+    try:
+        client = UniFiLocalClient()
+        start = time.perf_counter()
+        await client.login()
+        elapsed_ms = (time.perf_counter() - start) * 1000
+
+        result["connection"] = "OK"
+        result["connection_time_ms"] = round(elapsed_ms, 1)
+        result["authentication"] = "Valid"
+        result["controller_type"] = "UDM" if client._is_udm else "Cloud Key/Self-hosted"
+
+        # Get counts
+        try:
+            clients = await client.list_clients()
+            result["clients_count"] = len(clients)
+        except LocalAPIError:
+            pass
+
+        try:
+            devices = await client.get_devices()
+            result["devices_count"] = len(devices)
+        except LocalAPIError:
+            pass
+
+    except LocalAuthenticationError as e:
+        result["connection"] = "OK"
+        result["authentication"] = "FAILED"
+        result["error"] = str(e)
+    except LocalConnectionError as e:
+        result["connection"] = "FAILED"
+        result["error"] = str(e)
+    except Exception as e:
+        result["connection"] = "FAILED"
+        result["error"] = str(e)
+
+    return result
+
+
+def print_status_table(cloud_status: dict, local_status: dict | None = None) -> None:
     """Print status in formatted table."""
-    from rich.panel import Panel
     from rich.table import Table
 
     console.print()
@@ -132,42 +200,42 @@ def print_status_table(status: dict) -> None:
     table.add_column("Key", style="dim")
     table.add_column("Value")
 
-    table.add_row("URL:", status["url"])
+    table.add_row("URL:", cloud_status["url"])
 
     # API Key status
-    if status["api_key_configured"]:
-        table.add_row("API Key:", f"[green]{status['api_key_display']}[/green] (configured)")
+    if cloud_status["api_key_configured"]:
+        table.add_row("API Key:", f"[green]{cloud_status['api_key_display']}[/green] (configured)")
     else:
-        table.add_row("API Key:", f"[red]{status['api_key_display']}[/red]")
+        table.add_row("API Key:", f"[red]{cloud_status['api_key_display']}[/red]")
 
     # Connection status
-    if status["connection"] == "OK":
+    if cloud_status["connection"] == "OK":
         table.add_row(
             "Connection:",
-            f"[green]OK[/green] ({status['connection_time_ms']}ms)"
+            f"[green]OK[/green] ({cloud_status['connection_time_ms']}ms)"
         )
-    elif status["connection"] == "FAILED":
-        table.add_row("Connection:", f"[red]FAILED[/red]")
+    elif cloud_status["connection"] == "FAILED":
+        table.add_row("Connection:", "[red]FAILED[/red]")
     else:
         table.add_row("Connection:", "[dim]-[/dim]")
 
     # Authentication status
-    if status["authentication"] == "Valid":
+    if cloud_status["authentication"] == "Valid":
         table.add_row("Authentication:", "[green]Valid[/green]")
-    elif status["authentication"] == "FAILED":
-        table.add_row("Authentication:", f"[red]FAILED[/red]")
+    elif cloud_status["authentication"] == "FAILED":
+        table.add_row("Authentication:", "[red]FAILED[/red]")
     else:
         table.add_row("Authentication:", "[dim]-[/dim]")
 
     console.print(table)
 
     # Error message
-    if status["error"]:
+    if cloud_status["error"]:
         console.print()
-        console.print(f"  [red]Error:[/red] {status['error']}")
+        console.print(f"  [red]Error:[/red] {cloud_status['error']}")
 
     # Account info (if authenticated)
-    if status["authentication"] == "Valid" and status["hosts_count"] is not None:
+    if cloud_status["authentication"] == "Valid" and cloud_status["hosts_count"] is not None:
         console.print()
         console.print("[bold]Account Summary:[/bold]")
 
@@ -175,13 +243,83 @@ def print_status_table(status: dict) -> None:
         info_table.add_column("Key", style="dim")
         info_table.add_column("Value")
 
-        info_table.add_row("Hosts:", str(status["hosts_count"]))
-        info_table.add_row("Sites:", str(status["sites_count"]))
-        info_table.add_row("Devices:", str(status["devices_count"]))
+        info_table.add_row("Hosts:", str(cloud_status["hosts_count"]))
+        info_table.add_row("Sites:", str(cloud_status["sites_count"]))
+        info_table.add_row("Devices:", str(cloud_status["devices_count"]))
 
         console.print(info_table)
 
+    # Local Controller section
+    if local_status:
+        console.print()
+        console.print("[bold]Local Controller[/bold]")
+
+        local_table = Table(show_header=False, box=None, padding=(0, 2))
+        local_table.add_column("Key", style="dim")
+        local_table.add_column("Value")
+
+        local_table.add_row("URL:", local_status["url"])
+        local_table.add_row("Site:", local_status["site"])
+
+        if local_status["configured"]:
+            local_table.add_row("Username:", f"[green]{local_status['username']}[/green]")
+        else:
+            local_table.add_row("Username:", f"[red]{local_status['username']}[/red]")
+
+        # Connection status
+        if local_status["connection"] == "OK":
+            local_table.add_row(
+                "Connection:",
+                f"[green]OK[/green] ({local_status['connection_time_ms']}ms)"
+            )
+        elif local_status["connection"] == "FAILED":
+            local_table.add_row("Connection:", "[red]FAILED[/red]")
+        else:
+            local_table.add_row("Connection:", "[dim]-[/dim]")
+
+        # Authentication status
+        if local_status["authentication"] == "Valid":
+            local_table.add_row("Authentication:", "[green]Valid[/green]")
+        elif local_status["authentication"] == "FAILED":
+            local_table.add_row("Authentication:", "[red]FAILED[/red]")
+        else:
+            local_table.add_row("Authentication:", "[dim]-[/dim]")
+
+        # Controller type
+        if local_status["controller_type"]:
+            local_table.add_row("Type:", local_status["controller_type"])
+
+        console.print(local_table)
+
+        # Error message
+        if local_status["error"]:
+            console.print()
+            console.print(f"  [red]Error:[/red] {local_status['error']}")
+
+        # Controller info (if authenticated)
+        if local_status["authentication"] == "Valid":
+            console.print()
+            console.print("[bold]Controller Summary:[/bold]")
+
+            ctrl_table = Table(show_header=False, box=None, padding=(0, 2))
+            ctrl_table.add_column("Key", style="dim")
+            ctrl_table.add_column("Value")
+
+            if local_status["clients_count"] is not None:
+                ctrl_table.add_row("Clients:", str(local_status["clients_count"]))
+            if local_status["devices_count"] is not None:
+                ctrl_table.add_row("Devices:", str(local_status["devices_count"]))
+
+            console.print(ctrl_table)
+
     console.print()
+
+
+async def check_all_status(verbose: bool = False) -> tuple[dict, dict]:
+    """Check both Cloud API and Local Controller status."""
+    cloud_status = await check_site_manager_api(verbose=verbose)
+    local_status = await check_local_controller(verbose=verbose)
+    return cloud_status, local_status
 
 
 @app.callback(invoke_without_command=True)
@@ -206,14 +344,20 @@ def status(
 ) -> None:
     """Check API connectivity and authentication status."""
 
-    # Run async check
-    result = asyncio.run(check_site_manager_api(verbose=verbose))
+    # Run async checks
+    cloud_status, local_status = asyncio.run(check_all_status(verbose=verbose))
 
     if output == OutputFormat.JSON:
+        result = {
+            "cloud_api": cloud_status,
+            "local_controller": local_status,
+        }
         output_json(result, verbose=verbose)
     else:
-        print_status_table(result)
+        print_status_table(cloud_status, local_status)
 
-    # Exit with error code if not authenticated
-    if result["authentication"] != "Valid":
+    # Exit with error code if neither is authenticated
+    cloud_ok = cloud_status["authentication"] == "Valid"
+    local_ok = local_status["authentication"] == "Valid"
+    if not cloud_ok and not local_ok:
         raise typer.Exit(1)
