@@ -1,90 +1,48 @@
 # UniFi CLI User Guide
 
-A complete guide to using the UniFi CLI tool for managing your UniFi infrastructure.
+Complete reference for managing UniFi networks from the command line.
 
 ---
 
 ## Table of Contents
 
-1. [Getting Started](#getting-started)
-   - [Installation](#installation)
-   - [Configuration](#configuration)
-   - [Verify Setup](#verify-setup)
-2. [Cloud API Commands](#cloud-api-commands)
-   - [Status](#status)
-   - [Hosts](#hosts)
-   - [Sites](#sites)
-   - [Devices](#devices)
-   - [ISP Metrics](#isp-metrics)
-   - [SD-WAN](#sd-wan)
-3. [Local Controller Commands](#local-controller-commands)
-   - [Setup](#local-controller-setup)
-   - [Listing Clients](#listing-clients)
-   - [Client Details](#client-details)
-   - [Client Actions](#client-actions)
-   - [Client Statistics](#client-statistics)
-4. [Output Formats](#output-formats)
-5. [Command Reference](#command-reference)
-6. [Troubleshooting](#troubleshooting)
+- [Setup](#setup)
+- [Cloud API](#cloud-api)
+- [Local Controller](#local-controller)
+- [Running Config](#running-config)
+- [Output Formats](#output-formats)
+- [Quick Reference](#quick-reference)
+- [Troubleshooting](#troubleshooting)
 
 ---
 
-## Getting Started
+## Setup
 
-### Installation
-
-**Prerequisites:**
-- Python 3.10 or higher
-- Conda (recommended) or pip
-
-**Step 1: Clone the repository**
+### Install
 
 ```bash
-git clone <repo-url> ui-cmd
-cd ui-cmd
-```
-
-**Step 2: Create environment**
-
-Using Conda (recommended):
-```bash
+git clone https://github.com/vedanta/ui-cli.git
+cd ui-cli
 conda env create -f environment.yml
 conda activate ui-cli
 pip install -e .
 ```
 
-Using pip:
-```bash
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -e .
-```
+### Configure
 
-**Step 3: Run the CLI**
-
-```bash
-# Using the wrapper script (auto-activates conda)
-./ui --help
-
-# Or after activating environment
-ui --help
-```
-
-### Configuration
-
-Create a `.env` file from the example:
+Create `.env` file:
 
 ```bash
 cp .env.example .env
 ```
 
-Edit `.env` with your settings:
+Add your credentials:
 
 ```bash
-# Cloud API (for ./ui commands)
+# Cloud API
 UNIFI_API_KEY=your-api-key-here
 
-# Local Controller (for ./ui local commands)
+# Local Controller
 UNIFI_CONTROLLER_URL=https://192.168.1.1
 UNIFI_CONTROLLER_USERNAME=admin
 UNIFI_CONTROLLER_PASSWORD=yourpassword
@@ -92,272 +50,125 @@ UNIFI_CONTROLLER_SITE=default
 UNIFI_CONTROLLER_VERIFY_SSL=false
 ```
 
-**Getting a Cloud API Key:**
+### Get API Key
 
 1. Go to [unifi.ui.com](https://unifi.ui.com)
-2. Navigate to **Settings** → **API**
-3. Click **Create API Key**
-4. Copy the key (shown only once!)
+2. Settings → API → Create API Key
+3. Copy immediately (shown once)
 
-### Verify Setup
-
-Check cloud API connection:
+### Verify
 
 ```bash
-./ui status
-```
-
-Expected output:
-```
-UniFi CLI v0.1.0
-────────────────────────────────────────
-
-Site Manager API (api.ui.com)
-  URL:               https://api.ui.com/v1
-  API Key:           ****...abc123 (configured)
-  Connection:        OK (205.3ms)
-  Authentication:    Valid
-
-Account Summary:
-  Hosts:      2
-  Sites:      1
-  Devices:    23
-```
-
-Check local controller connection:
-
-```bash
-./ui lo clients list
+./ui status              # Cloud API
+./ui lo clients list     # Local controller
 ```
 
 ---
 
-## Cloud API Commands
+## Cloud API
 
-These commands use the UniFi Site Manager API at `api.ui.com`.
+Commands using `api.ui.com` - manage multiple sites from anywhere.
 
 ### Status
 
-Check API connectivity and authentication.
-
 ```bash
-# Basic status check
-./ui status
-
-# JSON output for scripting
-./ui status -o json
-
-# Show full API key (verbose)
-./ui status -v
+./ui status              # Connection check
+./ui status -o json      # For scripting
+./ui version             # CLI version
 ```
 
 ### Hosts
 
-Hosts are UniFi consoles/controllers (UDM, Cloud Key, etc.).
+UniFi controllers (UDM, Cloud Key, etc.)
 
 ```bash
-# List all hosts
-./ui hosts list
-
-# Get details for a specific host
-./ui hosts get HOST_ID
-
-# Export to CSV
-./ui hosts list -o csv > hosts.csv
-
-# JSON output
-./ui hosts get HOST_ID -o json
+./ui hosts list                      # All hosts
+./ui hosts get HOST_ID               # Host details
+./ui hosts list -o csv > hosts.csv   # Export
 ```
 
 ### Sites
 
-Sites are logical groupings within a host.
-
 ```bash
-# List all sites
-./ui sites list
-
-# JSON output
-./ui sites list -o json
+./ui sites list          # All sites
+./ui sites list -o json  # JSON output
 ```
 
 ### Devices
 
-Devices include APs, switches, gateways, and cameras.
+APs, switches, gateways, cameras.
 
 ```bash
-# List all devices
-./ui devices list
+./ui devices list                    # All devices
+./ui devices list --host HOST_ID     # Filter by host
+./ui devices list -v                 # Verbose
+./ui devices list -o csv             # Export
 
-# Filter by host
-./ui devices list --host HOST_ID
-
-# Show verbose details
-./ui devices list -v
-
-# Export to CSV
-./ui devices list -o csv > devices.csv
-```
-
-**Counting devices:**
-
-```bash
-# Total count
-./ui devices count
-
-# Group by model
-./ui devices count --by model
-
-# Group by status (find offline devices)
-./ui devices count --by status
-
-# Group by product line
-./ui devices count --by product-line
-
-# Group by host
-./ui devices count --by host
-
-# JSON output
-./ui devices count -b model -o json
+# Counting
+./ui devices count                   # Total
+./ui devices count --by model        # By model
+./ui devices count --by status       # Find offline
+./ui devices count --by product-line # By type
+./ui devices count --by host         # By controller
 ```
 
 ### ISP Metrics
 
-View internet service provider performance metrics.
-
 ```bash
-# Hourly metrics (last 7 days)
-./ui isp metrics
-
-# 5-minute intervals (last 24 hours)
-./ui isp metrics -i 5m
-
-# Hourly intervals
-./ui isp metrics -i 1h
-
-# Custom time range (last 48 hours)
-./ui isp metrics --hours 48
-
-# Export to CSV
-./ui isp metrics -o csv > isp.csv
+./ui isp metrics                # 7 days, hourly
+./ui isp metrics -i 5m          # 24h, 5-min intervals
+./ui isp metrics --hours 48     # Custom range
+./ui isp metrics -o csv         # Export
 ```
 
-**Available metrics:**
-- Latency (average and maximum)
-- Download/upload speeds
-- Uptime percentage
-- Packet loss
-- ISP name
+**Fields:** latency (avg/max), speeds, uptime, packet loss, ISP name
 
 ### SD-WAN
 
-Manage SD-WAN (Site Magic) configurations.
-
 ```bash
-# List all SD-WAN configs
-./ui sdwan list
-
-# Get config details
-./ui sdwan get CONFIG_ID
-
-# Get deployment status
-./ui sdwan status CONFIG_ID
+./ui sdwan list              # All configs
+./ui sdwan get ID            # Config details
+./ui sdwan status ID         # Deployment status
 ```
 
 ---
 
-## Local Controller Commands
+## Local Controller
 
-These commands connect directly to your UniFi Controller (UDM, Cloud Key, or self-hosted).
+Direct connection to your controller. Use `./ui local` or `./ui lo`.
 
-Use `./ui local` or the shorthand `./ui lo`.
-
-### Local Controller Setup
-
-Add these to your `.env` file:
+### List Clients
 
 ```bash
-UNIFI_CONTROLLER_URL=https://192.168.1.1
-UNIFI_CONTROLLER_USERNAME=admin
-UNIFI_CONTROLLER_PASSWORD=yourpassword
-UNIFI_CONTROLLER_SITE=default
-UNIFI_CONTROLLER_VERIFY_SSL=false
+./ui lo clients list             # Connected clients
+./ui lo clients list -w          # Wired only
+./ui lo clients list -W          # Wireless only
+./ui lo clients list -n "Guest"  # By network
+./ui lo clients list -v          # Verbose
+./ui lo clients all              # Include offline
 ```
 
-**Notes:**
-- Use `https://` for the controller URL
-- Set `VERIFY_SSL=false` for self-signed certificates (common on UDM)
-- The default site is usually `default`
-
-### Listing Clients
-
-**List connected (online) clients:**
-
-```bash
-./ui lo clients list
+**Output:**
 ```
-
-Output:
-```
-                            Connected Clients
-┏━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━┓
-┃ Name           ┃ MAC               ┃ IP          ┃ Network  ┃ Type     ┃
-┡━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━┩
-│ my-MacBook     │ AA:BB:CC:DD:EE:FF │ 10.0.1.50   │ Home     │ Wireless │
-│ Living-Room-TV │ 11:22:33:44:55:66 │ 10.0.1.100  │ Home     │ Wired    │
-└────────────────┴───────────────────┴─────────────┴──────────┴──────────┘
-```
-
-**Filter options:**
-
-```bash
-# Wired clients only
-./ui lo clients list --wired
-./ui lo clients list -w
-
-# Wireless clients only
-./ui lo clients list --wireless
-./ui lo clients list -W
-
-# Filter by network/SSID
-./ui lo clients list --network "Guest"
-./ui lo clients list -n "Home"
-
-# Show more details
-./ui lo clients list --verbose
-./ui lo clients list -v
-```
-
-**List all known clients (including offline):**
-
-```bash
-./ui lo clients all
+                         Connected Clients
+┏━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━━┓
+┃ Name         ┃ MAC               ┃ IP         ┃ Network ┃ Type     ┃
+┡━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━━┩
+│ my-MacBook   │ AA:BB:CC:DD:EE:FF │ 10.0.1.50  │ Home    │ Wireless │
+│ Smart-TV     │ 11:22:33:44:55:66 │ 10.0.1.100 │ Home    │ Wired    │
+└──────────────┴───────────────────┴────────────┴─────────┴──────────┘
 ```
 
 ### Client Details
 
-**Get client information:**
-
-You can use either the client name or MAC address:
-
 ```bash
-# By name
-./ui lo clients get my-MacBook
-
-# By MAC address
-./ui lo clients get AA:BB:CC:DD:EE:FF
-
-# Partial name matching works too
-./ui lo clients get MacBook
+./ui lo clients get my-MacBook         # By name
+./ui lo clients get AA:BB:CC:DD:EE:FF  # By MAC
+./ui lo clients get MacBook            # Partial match
+./ui lo clients status my-MacBook      # Full status
 ```
 
-**Get comprehensive client status:**
-
-```bash
-./ui lo clients status my-MacBook
-```
-
-Output:
+**Status output:**
 ```
 Client Status: my-MacBook
 ────────────────────────────────────────
@@ -383,398 +194,288 @@ Client Status: my-MacBook
   Blocked:   No
 ```
 
-**Understanding the status output:**
-
-| Field | Description |
-|-------|-------------|
-| Signal | WiFi signal strength in dBm (green: > -50, yellow: -50 to -70, red: < -70) |
-| Channel | WiFi channel and protocol (AC = WiFi 5, AX = WiFi 6) |
-| Experience | UniFi's satisfaction score (green: > 80%, yellow: 50-80%, red: < 50%) |
-| Uptime | How long the client has been connected |
-| Speed | Current TX/RX link speed in Mbps |
-| Data | Total data transferred this session |
+| Field | Meaning |
+|-------|---------|
+| Signal | dBm (green >-50, yellow -50 to -70, red <-70) |
+| Channel | WiFi channel + protocol (AC=WiFi 5, AX=WiFi 6) |
+| Experience | UniFi satisfaction (green >80%, yellow 50-80%, red <50%) |
 
 ### Client Actions
 
-**Block a client:**
-
-Prevents the client from connecting to the network.
-
 ```bash
-# With confirmation prompt
-./ui lo clients block my-MacBook
-
-# Skip confirmation
-./ui lo clients block my-MacBook -y
-./ui lo clients block my-MacBook --yes
-```
-
-**Unblock a client:**
-
-```bash
-./ui lo clients unblock my-MacBook
-./ui lo clients unblock my-MacBook -y
-```
-
-**Kick (disconnect) a client:**
-
-Forces the client to disconnect and reconnect.
-
-```bash
-./ui lo clients kick my-MacBook
-./ui lo clients kick my-MacBook -y
+./ui lo clients block my-MacBook      # Block (with confirmation)
+./ui lo clients unblock my-MacBook    # Unblock
+./ui lo clients kick my-MacBook       # Disconnect
+./ui lo clients block my-MacBook -y   # Skip confirmation
 ```
 
 ### Client Statistics
 
-**Count clients by category:**
-
 ```bash
-# By connection type (default)
-./ui lo clients count
+./ui lo clients count                 # By type
+./ui lo clients count --by network    # By SSID
+./ui lo clients count --by vendor     # By manufacturer
+./ui lo clients count --by ap         # By access point
+./ui lo clients count --by experience # By WiFi quality
+./ui lo clients count -a              # Include offline
 ```
 
-Output:
-```
-        Client Count by Type
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━┓
-┃ Type       ┃      Count ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━┩
-│ Wired      │         12 │
-│ Wireless   │         35 │
-│ ────────── │ ────────── │
-│ Total      │         47 │
-└────────────┴────────────┘
-```
+### Find Duplicates
 
-**Other grouping options:**
-
-```bash
-# By network/SSID
-./ui lo clients count --by network
-
-# By device vendor/manufacturer
-./ui lo clients count --by vendor
-
-# By access point
-./ui lo clients count --by ap
-
-# By WiFi experience quality
-./ui lo clients count --by experience
-
-# Include offline clients
-./ui lo clients count --include-offline
-./ui lo clients count -a
-```
-
-**Find duplicate client names:**
-
-Useful for finding devices with multiple NICs (WiFi + Ethernet) or different devices with the same name.
+Identifies devices with multiple NICs or naming conflicts.
 
 ```bash
 ./ui lo clients duplicates
 ```
 
-Output:
 ```
-Found 3 duplicate name(s):
+Found 2 duplicate name(s):
 
 my-MacBook (2 NICs) ← likely same device
   • AA:BB:CC:DD:EE:FF (10.0.1.50) wifi - Apple, Inc.
   • 11:22:33:44:55:66 (10.0.1.51) wired - Apple, Inc.
 
-iPad (4 clients)
+iPad (3 clients)
   • 22:33:44:55:66:77 (10.0.1.60) wifi - Apple, Inc.
   • 33:44:55:66:77:88 (10.0.1.61) wifi - Apple, Inc.
   • 44:55:66:77:88:99 (10.0.1.62) wifi - Apple, Inc.
-  • 55:66:77:88:99:AA (10.0.1.63) wifi - Apple, Inc.
 ```
 
-The command identifies:
-- **Multi-NIC devices**: Same device with both wired and wireless connections (marked "← likely same device")
-- **Name conflicts**: Different devices sharing the same name
+---
+
+## Running Config
+
+Export your network configuration for backup, documentation, or version control.
+
+### Full Config
+
+```bash
+./ui lo config show              # All sections, table format
+./ui lo config show -o yaml      # YAML export
+./ui lo config show -o json      # JSON export
+./ui lo config show -v           # Include IDs
+./ui lo config show --show-secrets  # Include passwords
+```
+
+### Specific Sections
+
+```bash
+./ui lo config show -s networks      # VLANs, subnets, DHCP
+./ui lo config show -s wireless      # SSIDs, security, bands
+./ui lo config show -s firewall      # Rules and groups
+./ui lo config show -s devices       # Device inventory
+./ui lo config show -s portfwd       # Port forwarding
+./ui lo config show -s dhcp          # DHCP reservations
+./ui lo config show -s routing       # Static routes
+```
+
+### Example Output
+
+```
+UniFi Running Configuration
+══════════════════════════════════════════════════════════════════════
+Controller: https://192.168.1.1
+Site: default
+Exported: 2024-11-30 10:45:23
+══════════════════════════════════════════════════════════════════════
+
+┌─ NETWORKS ──────────────────────────────────────────────────────────┐
+
+  Default
+    Purpose:       corporate
+    Subnet:        10.0.1.0/24
+    Gateway:       10.0.1.1
+    DHCP:          Enabled (10.0.1.100 - 10.0.1.254)
+    DNS:           10.0.1.1, 1.1.1.1
+
+  IoT (VLAN 20)
+    Purpose:       iot
+    Subnet:        10.0.20.0/24
+    Isolation:     Yes
+
+└──────────────────────────────────────────────────────────────────────┘
+
+┌─ WIRELESS ──────────────────────────────────────────────────────────┐
+
+  HomeWiFi
+    Network:       Default
+    Security:      WPA2/WPA3 Personal
+    Band:          2.4 GHz + 5 GHz
+    PMF:           optional
+
+  IoT-Network
+    Network:       IoT
+    Security:      WPA2 Personal
+    Band:          2.4 GHz only
+    Hidden:        Yes
+
+└──────────────────────────────────────────────────────────────────────┘
+
+┌─ DEVICES ───────────────────────────────────────────────────────────┐
+
+  UDM-SE (Gateway) online
+    IP:            192.168.1.1
+    MAC:           AA:BB:CC:DD:EE:01
+    Firmware:      4.0.6
+    Uptime:        45d 12h
+
+  Living-Room-AP (U6-Pro) online
+    IP:            10.0.1.10
+    Firmware:      6.6.55
+    Channel 2.4G:  6 (HT40)
+    Channel 5G:    36 (VHT80)
+
+└──────────────────────────────────────────────────────────────────────┘
+
+Summary: 2 networks, 2 SSIDs, 0 firewall rules, 2 devices
+```
+
+### Backup to YAML
+
+```bash
+./ui lo config show -o yaml > backup-$(date +%Y%m%d).yaml
+```
 
 ---
 
 ## Output Formats
 
-All commands support three output formats via the `--output` or `-o` option.
+All commands support multiple formats via `-o`:
 
-### Table (Default)
+| Format | Flag | Use Case |
+|--------|------|----------|
+| Table | (default) | Human reading |
+| JSON | `-o json` | Scripting, APIs |
+| CSV | `-o csv` | Spreadsheets |
+| YAML | `-o yaml` | Config backup (config command only) |
 
-Human-readable formatted tables:
-
-```bash
-./ui devices list
-./ui lo clients list
-```
-
-### JSON
-
-Machine-readable JSON for scripting:
+### JSON with jq
 
 ```bash
-./ui devices list -o json
-./ui lo clients status my-MacBook -o json
-```
-
-**Example: Using with jq**
-
-```bash
-# Count devices
+# Count items
 ./ui devices list -o json | jq 'length'
 
-# Get offline devices
+# Filter offline
 ./ui devices list -o json | jq '[.[] | select(.status == "offline")]'
 
-# List device names
-./ui devices list -o json | jq -r '.[].name'
-
-# Get client IPs
+# Extract field
 ./ui lo clients list -o json | jq -r '.[].ip'
+
+# Pretty names
+./ui devices list -o json | jq -r '.[].name'
 ```
 
-### CSV
-
-Spreadsheet-compatible CSV:
+### CSV Export
 
 ```bash
 ./ui devices list -o csv > devices.csv
 ./ui lo clients list -o csv > clients.csv
+./ui isp metrics -o csv > isp-metrics.csv
 ```
 
 ---
 
-## Command Reference
+## Quick Reference
 
-### Global Options
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--output` | `-o` | Output format: `table`, `json`, `csv` |
-| `--verbose` | `-v` | Show additional details |
-| `--help` | | Show help message |
-| `--version` | `-V` | Show version |
-
-### Cloud API Commands
+### Cloud Commands
 
 | Command | Description |
 |---------|-------------|
-| `./ui status` | Check API connection and authentication |
-| `./ui version` | Show CLI version |
-| `./ui hosts list` | List all hosts (controllers) |
-| `./ui hosts get <ID>` | Get host details |
-| `./ui sites list` | List all sites |
-| `./ui devices list` | List all devices |
-| `./ui devices count` | Count devices by category |
-| `./ui isp metrics` | Show ISP performance metrics |
-| `./ui sdwan list` | List SD-WAN configurations |
-| `./ui sdwan get <ID>` | Get SD-WAN config details |
-| `./ui sdwan status <ID>` | Get SD-WAN deployment status |
+| `./ui status` | API connection status |
+| `./ui hosts list` | List controllers |
+| `./ui sites list` | List sites |
+| `./ui devices list` | List devices |
+| `./ui devices count --by X` | Count by model/status/host |
+| `./ui isp metrics` | ISP performance |
+| `./ui sdwan list` | SD-WAN configs |
 
-### Local Controller Commands
+### Local Commands
 
 | Command | Description |
 |---------|-------------|
-| `./ui lo clients list` | List connected clients |
-| `./ui lo clients all` | List all known clients (including offline) |
-| `./ui lo clients get <name\|MAC>` | Get client details |
-| `./ui lo clients status <name\|MAC>` | Show comprehensive client status |
-| `./ui lo clients block <name\|MAC>` | Block a client |
-| `./ui lo clients unblock <name\|MAC>` | Unblock a client |
-| `./ui lo clients kick <name\|MAC>` | Disconnect a client |
-| `./ui lo clients count` | Count clients by category |
-| `./ui lo clients duplicates` | Find duplicate client names |
+| `./ui lo clients list` | Connected clients |
+| `./ui lo clients all` | All clients (inc. offline) |
+| `./ui lo clients get NAME` | Client details |
+| `./ui lo clients status NAME` | Full client status |
+| `./ui lo clients block NAME` | Block client |
+| `./ui lo clients kick NAME` | Disconnect client |
+| `./ui lo clients count --by X` | Count by type/network/vendor/ap |
+| `./ui lo clients duplicates` | Find duplicate names |
+| `./ui lo config show` | Running configuration |
+| `./ui lo config show -s X` | Specific section |
 
-### Command Options
-
-**`./ui devices list`**
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--host` | `-h` | Filter by host ID |
-| `--output` | `-o` | Output format |
-| `--verbose` | `-v` | Show additional details |
-
-**`./ui devices count`**
+### Common Options
 
 | Option | Short | Description |
 |--------|-------|-------------|
-| `--by` | `-b` | Group by: `model`, `status`, `product-line`, `host` |
-| `--output` | `-o` | Output format |
-
-**`./ui isp metrics`**
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--interval` | `-i` | Interval: `5m` or `1h` |
-| `--hours` | | Number of hours to fetch |
-| `--output` | `-o` | Output format |
-
-**`./ui lo clients list`**
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--network` | `-n` | Filter by network/SSID |
-| `--wired` | `-w` | Show only wired clients |
-| `--wireless` | `-W` | Show only wireless clients |
-| `--verbose` | `-v` | Show additional details |
-| `--output` | `-o` | Output format |
-
-**`./ui lo clients count`**
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--by` | `-b` | Group by: `type`, `network`, `vendor`, `ap`, `experience` |
-| `--include-offline` | `-a` | Include offline clients |
-| `--output` | `-o` | Output format |
-
-**`./ui lo clients block/unblock/kick`**
-
-| Option | Short | Description |
-|--------|-------|-------------|
-| `--yes` | `-y` | Skip confirmation prompt |
+| `--output` | `-o` | Format: table/json/csv/yaml |
+| `--verbose` | `-v` | More details |
+| `--yes` | `-y` | Skip confirmation |
+| `--help` | | Show help |
 
 ---
 
 ## Troubleshooting
 
-### "API key not configured"
+| Error | Fix |
+|-------|-----|
+| API key not configured | Add `UNIFI_API_KEY` to `.env` |
+| Invalid API key | Check at unifi.ui.com → Settings → API |
+| Connection timeout | Check internet / `api.ui.com` access |
+| Controller URL not configured | Add `UNIFI_CONTROLLER_URL` to `.env` |
+| Invalid username or password | Test creds in UniFi web UI; use local admin account |
+| SSL certificate verify failed | Set `UNIFI_CONTROLLER_VERIFY_SSL=false` |
+| Client not found | Try partial name or use MAC address |
+| Session expired | Delete `~/.config/ui-cli/session.json` |
 
-Make sure your `.env` file exists and contains your API key:
-
-```bash
-cp .env.example .env
-# Edit .env and add UNIFI_API_KEY=your-key
-```
-
-### "Invalid API key"
-
-1. Check your API key at [unifi.ui.com](https://unifi.ui.com) → Settings → API
-2. Ensure no extra spaces or quotes in `.env`
-3. API keys may expire - create a new one if needed
-
-### "Connection timeout"
-
-- Check your internet connection
-- The cloud API requires access to `api.ui.com`
-- For local controller, verify the URL is correct and reachable
-
-### "Controller URL not configured"
-
-Add local controller settings to `.env`:
+### Get Help
 
 ```bash
-UNIFI_CONTROLLER_URL=https://192.168.1.1
-UNIFI_CONTROLLER_USERNAME=admin
-UNIFI_CONTROLLER_PASSWORD=yourpassword
-```
-
-### "Invalid username or password" (Local Controller)
-
-1. Verify credentials work in the UniFi web interface
-2. Create a local admin account (not a UI.com account)
-3. Some controllers require a specific user for API access
-
-### "SSL certificate verify failed"
-
-For self-signed certificates (common on UDM), add to `.env`:
-
-```bash
-UNIFI_CONTROLLER_VERIFY_SSL=false
-```
-
-### "Client not found"
-
-When using client names:
-- Names are case-insensitive
-- Partial matching is supported
-- If multiple clients match, you'll see a list to choose from
-- Use the MAC address for exact matching
-
-### Empty Tables
-
-Some commands may return empty results if:
-- No SD-WAN configurations exist
-- No clients are connected
-- Filters exclude all results
-
-Use `./ui status` to verify your account has resources.
-
-### Session Expired
-
-The CLI automatically handles session expiry for local controller commands. If you see repeated authentication errors, try:
-
-```bash
-# Clear the session file
-rm ~/.config/ui-cli/session.json
+./ui --help                    # All commands
+./ui devices --help            # Device commands
+./ui lo clients --help         # Client commands
+./ui lo config show --help     # Config options
 ```
 
 ---
 
-## Tips & Tricks
+## Tips
 
-### Aliases
-
-Add to your shell profile (`.bashrc`, `.zshrc`):
+### Shell Aliases
 
 ```bash
+# Add to .bashrc or .zshrc
 alias ui='./ui'
-alias uilo='./ui lo'
 alias clients='./ui lo clients'
+alias config='./ui lo config show'
 ```
 
-### Quick Client Lookup
+### Scripting Examples
 
 ```bash
-# Find a device quickly
-./ui lo clients list | grep -i iphone
-
-# Get status by partial name
-./ui lo clients status iphone
-```
-
-### Export for Reporting
-
-```bash
-# Weekly device inventory
-./ui devices list -o csv > "devices-$(date +%Y%m%d).csv"
-
-# Client snapshot
-./ui lo clients list -o csv > "clients-$(date +%Y%m%d).csv"
-```
-
-### Scripting
-
-```bash
-# Check if API is working
-if ./ui status -o json | jq -e '.authentication == "Valid"' > /dev/null; then
-    echo "API OK"
-fi
+# Check API health
+./ui status -o json | jq -e '.authentication == "Valid"'
 
 # Alert on offline devices
 OFFLINE=$(./ui devices count -b status -o json | jq '.counts.offline // 0')
-if [ "$OFFLINE" -gt 0 ]; then
-    echo "Warning: $OFFLINE devices offline"
-fi
+[ "$OFFLINE" -gt 0 ] && echo "Warning: $OFFLINE offline"
 
-# Block device by name in script
-./ui lo clients block "Guest-Device" -y
+# Daily backup
+./ui lo config show -o yaml > "config-$(date +%Y%m%d).yaml"
+
+# Find device by partial name
+./ui lo clients list -o json | jq '.[] | select(.name | test("iPhone"; "i"))'
 ```
 
----
-
-## Getting Help
+### Quick Lookups
 
 ```bash
-# General help
-./ui --help
+# Find any iPhone
+./ui lo clients list | grep -i iphone
 
-# Command-specific help
-./ui devices --help
-./ui devices count --help
-./ui lo clients --help
-./ui lo clients status --help
+# Status by partial name
+./ui lo clients status iphone
+
+# Who's on Guest network
+./ui lo clients list -n Guest
 ```
-
-For issues and feature requests, visit the GitHub repository.

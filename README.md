@@ -1,7 +1,7 @@
 # UniFi CLI
 
 <p align="center">
-  <img src="art/uicli.png" alt="UI-CLI" width="400">
+  <img src="art/uicli_new.png" alt="UI-CLI" width="400">
 </p>
 
 <p align="center">
