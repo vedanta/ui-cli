@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ui-cli"
-version = "0.1.0"
+version = "0.2.0"
 description = "CLI utility for UniFi Site Manager API"
 readme = "README.md"
 license = "MIT"
