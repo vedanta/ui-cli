@@ -2,7 +2,7 @@
 
 import typer
 
-from ui_cli.commands.local import clients
+from ui_cli.commands.local import clients, config
 
 app = typer.Typer(
     name="local",
@@ -12,3 +12,4 @@ app = typer.Typer(
 
 # Register subcommands
 app.add_typer(clients.app, name="clients")
+app.add_typer(config.app, name="config")

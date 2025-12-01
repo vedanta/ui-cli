@@ -19,6 +19,7 @@ class OutputFormat(str, Enum):
     TABLE = "table"
     JSON = "json"
     CSV = "csv"
+    YAML = "yaml"
 
 
 def flatten_dict(data: dict[str, Any], parent_key: str = "", sep: str = ".") -> dict[str, Any]:

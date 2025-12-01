@@ -358,3 +358,80 @@ class UniFiLocalClient:
         mac = mac.lower().replace("-", ":")
         response = await self.post("/cmd/stamgr", data={"cmd": "kick-sta", "mac": mac})
         return response.get("meta", {}).get("rc") == "ok"
+
+    # ========== Configuration ==========
+
+    async def get_networks(self) -> list[dict[str, Any]]:
+        """Get all network configurations (VLANs, subnets)."""
+        response = await self.get("/rest/networkconf")
+        return response.get("data", [])
+
+    async def get_wlans(self) -> list[dict[str, Any]]:
+        """Get all wireless network (SSID) configurations."""
+        response = await self.get("/rest/wlanconf")
+        return response.get("data", [])
+
+    async def get_firewall_rules(self) -> list[dict[str, Any]]:
+        """Get all firewall rules."""
+        response = await self.get("/rest/firewallrule")
+        return response.get("data", [])
+
+    async def get_firewall_groups(self) -> list[dict[str, Any]]:
+        """Get all firewall groups."""
+        response = await self.get("/rest/firewallgroup")
+        return response.get("data", [])
+
+    async def get_port_forwards(self) -> list[dict[str, Any]]:
+        """Get all port forwarding rules."""
+        response = await self.get("/rest/portforward")
+        return response.get("data", [])
+
+    async def get_devices(self) -> list[dict[str, Any]]:
+        """Get all device configurations and status."""
+        response = await self.get("/stat/device")
+        return response.get("data", [])
+
+    async def get_dhcp_reservations(self) -> list[dict[str, Any]]:
+        """Get DHCP reservations (clients with fixed IPs)."""
+        # Fixed IPs are stored in user records with use_fixedip=True
+        response = await self.get("/rest/user")
+        users = response.get("data", [])
+        return [u for u in users if u.get("use_fixedip", False)]
+
+    async def get_traffic_rules(self) -> list[dict[str, Any]]:
+        """Get traffic rules/schedules."""
+        response = await self.get("/rest/trafficrule")
+        return response.get("data", [])
+
+    async def get_routing(self) -> list[dict[str, Any]]:
+        """Get static routes."""
+        response = await self.get("/rest/routing")
+        return response.get("data", [])
+
+    async def get_site_settings(self) -> list[dict[str, Any]]:
+        """Get site settings."""
+        response = await self.get("/rest/setting")
+        return response.get("data", [])
+
+    async def get_running_config(self) -> dict[str, Any]:
+        """Get full running configuration."""
+        config: dict[str, Any] = {}
+
+        # Fetch each section, handling errors gracefully
+        async def safe_fetch(name: str, func):
+            try:
+                config[name] = await func()
+            except LocalAPIError:
+                config[name] = []  # Empty list on error
+
+        await safe_fetch("networks", self.get_networks)
+        await safe_fetch("wireless", self.get_wlans)
+        await safe_fetch("firewall_rules", self.get_firewall_rules)
+        await safe_fetch("firewall_groups", self.get_firewall_groups)
+        await safe_fetch("port_forwards", self.get_port_forwards)
+        await safe_fetch("devices", self.get_devices)
+        await safe_fetch("dhcp_reservations", self.get_dhcp_reservations)
+        await safe_fetch("traffic_rules", self.get_traffic_rules)
+        await safe_fetch("routing", self.get_routing)
+
+        return config
