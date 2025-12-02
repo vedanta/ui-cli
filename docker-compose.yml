@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  ui-cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: ui-cli:latest
+    container_name: ui-cli
+
+    # Load environment variables from .env file
+    env_file:
+      - .env
+
+    # Or specify individually:
+    # environment:
+    #   - UNIFI_API_KEY=${UNIFI_API_KEY}
+    #   - UNIFI_CONTROLLER_URL=${UNIFI_CONTROLLER_URL}
+    #   - UNIFI_CONTROLLER_USERNAME=${UNIFI_CONTROLLER_USERNAME}
+    #   - UNIFI_CONTROLLER_PASSWORD=${UNIFI_CONTROLLER_PASSWORD}
+    #   - UNIFI_CONTROLLER_SITE=${UNIFI_CONTROLLER_SITE:-default}
+    #   - UNIFI_CONTROLLER_VERIFY_SSL=${UNIFI_CONTROLLER_VERIFY_SSL:-false}
+
+    # Persist session data
+    volumes:
+      - ui-cli-config:/home/uicli/.config/ui-cli
+
+    # Interactive mode
+    stdin_open: true
+    tty: true
+
+volumes:
+  ui-cli-config:

@@ -296,11 +296,39 @@ source venv/bin/activate
 pip install -e .
 ```
 
+### Using Docker
+
+```bash
+# Build the image
+docker build -t ui-cli .
+
+# Run with environment variables
+docker run --rm -e UNIFI_API_KEY=your-key ui-cli status
+
+# Run with .env file
+docker run --rm --env-file .env ui-cli hosts list
+
+# Run local controller commands
+docker run --rm --env-file .env ui-cli lo clients list
+
+# Interactive mode
+docker run -it --rm --env-file .env ui-cli shell
+```
+
+**Docker Compose:**
+
+```bash
+# Run commands
+docker-compose run --rm ui-cli status
+docker-compose run --rm ui-cli lo clients list
+```
+
 ### Running
 
 ```bash
 ./ui --help          # Using wrapper script
 ui --help            # After pip install
+docker run ui-cli    # Using Docker
 ```
 
 ---
