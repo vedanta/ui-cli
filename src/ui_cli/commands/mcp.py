@@ -2,6 +2,7 @@
 
 import json
 import platform
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -140,6 +141,28 @@ def generate_mcp_config() -> dict:
     }
 
 
+def check_mcp_module(python_path: str | Path) -> tuple[bool, str]:
+    """Check if mcp module is installed in the given Python environment.
+
+    Returns (success, message) tuple.
+    """
+    try:
+        result = subprocess.run(
+            [str(python_path), "-c", "import mcp.server.fastmcp; print('ok')"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        if result.returncode == 0 and "ok" in result.stdout:
+            return True, "installed"
+        else:
+            return False, "not installed"
+    except subprocess.TimeoutExpired:
+        return False, "check timed out"
+    except Exception as e:
+        return False, str(e)
+
+
 # ==============================================================================
 # Commands
 # ==============================================================================
@@ -196,6 +219,19 @@ def install(
     # Print summary
     print_config_summary(mcp_config)
 
+    # Check mcp module
+    console.print()
+    mcp_ok, mcp_msg = check_mcp_module(sys.executable)
+    if mcp_ok:
+        print_success(f"mcp package installed ({mcp_msg})")
+    else:
+        print_error(f"mcp package not installed in {sys.executable}")
+        console.print()
+        console.print("[bold red]Required:[/bold red] Install the mcp package:")
+        console.print(f"  [cyan]{sys.executable} -m pip install mcp[/cyan]")
+        console.print()
+        raise typer.Exit(1)
+
     console.print()
     console.print("[bold yellow]Restart Claude Desktop to activate the MCP server.[/bold yellow]")
 
@@ -249,6 +285,17 @@ def check() -> None:
     else:
         print_error(f"ui_mcp module not found at: {ui_mcp_path}")
 
+    # Check mcp package installed
+    has_errors = False
+    if python_path.exists():
+        mcp_ok, mcp_msg = check_mcp_module(python_path)
+        if mcp_ok:
+            print_success(f"mcp package installed ({mcp_msg})")
+        else:
+            print_error(f"mcp package not installed")
+            console.print(f"        Run: [cyan]{python_path} -m pip install mcp[/cyan]")
+            has_errors = True
+
     # List other servers
     other_servers = [k for k in mcp_servers.keys() if k != "ui-cli"]
     if other_servers:
@@ -256,7 +303,11 @@ def check() -> None:
         console.print(f"[dim]Other MCP servers: {', '.join(other_servers)}[/dim]")
 
     console.print()
-    console.print("[bold green]Status: Ready[/bold green]")
+    if has_errors:
+        console.print("[bold red]Status: Not Ready (fix errors above)[/bold red]")
+        raise typer.Exit(1)
+    else:
+        console.print("[bold green]Status: Ready[/bold green]")
 
 
 @app.command()
