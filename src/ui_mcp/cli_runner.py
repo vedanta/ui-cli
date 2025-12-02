@@ -4,7 +4,9 @@ Executes UI CLI commands via subprocess and returns parsed JSON output.
 """
 
 import json
+import os
 import subprocess
+import sys
 from pathlib import Path
 
 # Project root is parent of src/
@@ -26,7 +28,10 @@ def run_cli(
     Returns:
         Parsed JSON output or error dict with 'error' key
     """
-    cmd = ["./ui"] + args
+    # Use the same Python that's running the MCP server
+    # This ensures we're in the correct conda environment
+    python_path = sys.executable
+    cmd = [python_path, "-m", "ui_cli.main"] + args
 
     # Add JSON output flag if not present
     if "-o" not in args and "--output" not in args:
@@ -39,6 +44,10 @@ def run_cli(
         if "-y" not in args and "--yes" not in args:
             cmd.append("-y")
 
+    # Set up environment with PYTHONPATH
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(PROJECT_ROOT / "src")
+
     try:
         result = subprocess.run(
             cmd,
@@ -46,6 +55,7 @@ def run_cli(
             capture_output=True,
             text=True,
             timeout=timeout,
+            env=env,
         )
 
         # Try to parse stdout as JSON
