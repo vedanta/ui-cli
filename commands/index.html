@@ -529,6 +529,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#claude-desktop-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Desktop (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -619,6 +630,34 @@
     
   
     Local Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="mcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Claude Desktop
   
 
     
@@ -791,6 +830,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#claude-desktop-mcp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claude Desktop (MCP)
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -850,10 +900,11 @@
 
 
 <h1 id="command-reference">Command Reference</h1>
-<p>UI-CLI provides two sets of commands:</p>
+<p>UI-CLI provides three interfaces:</p>
 <ul>
 <li><strong>Cloud API</strong> - Commands via <code>api.ui.com</code> for multi-site management</li>
 <li><strong>Local Controller</strong> - Direct connection to your controller for real-time operations</li>
+<li><strong>Claude Desktop</strong> - Natural language control via MCP integration</li>
 </ul>
 <h2 id="command-tree">Command Tree</h2>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>./ui
@@ -865,7 +916,8 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── devices             # Cloud: manage devices
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── isp                 # Cloud: ISP metrics
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── sdwan               # Cloud: SD-WAN configs
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>└── local (lo)          # Local controller commands
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── local (lo)          # Local controller commands
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>└── mcp                  # Claude Desktop integration
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference</h2>
 <h3 id="cloud-api">Cloud API</h3>
@@ -962,6 +1014,42 @@
 </tr>
 </tbody>
 </table>
+<h3 id="claude-desktop-mcp">Claude Desktop (MCP)</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>network_health</code></td>
+<td>Network health summary</td>
+</tr>
+<tr>
+<td><code>client_count</code></td>
+<td>Count connected clients</td>
+</tr>
+<tr>
+<td><code>find_client</code></td>
+<td>Find client by name</td>
+</tr>
+<tr>
+<td><code>block_client</code></td>
+<td>Block a client</td>
+</tr>
+<tr>
+<td><code>restart_device</code></td>
+<td>Restart a device</td>
+</tr>
+<tr>
+<td><code>create_voucher</code></td>
+<td>Create guest WiFi code</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="mcp/">Claude Desktop</a> for full tool list and setup instructions.</p>
 <h2 id="output-formats">Output Formats</h2>
 <p>All commands support multiple output formats:</p>
 <div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>./ui<span class="w"> </span>devices<span class="w"> </span>list<span class="w">              </span><span class="c1"># Table (default)</span>

@@ -10,31 +10,31 @@
       
       
       
-        <link rel="canonical" href="https://vedanta.github.io/ui-cli/troubleshooting/">
+        <link rel="canonical" href="https://vedanta.github.io/ui-cli/commands/mcp/">
       
       
-        <link rel="prev" href="../examples/">
+        <link rel="prev" href="../local/">
       
       
-        <link rel="next" href="../changelog/">
+        <link rel="next" href="../../examples/">
       
       
         
       
       
-      <link rel="icon" href="../assets/gorilla.png">
+      <link rel="icon" href="../../assets/gorilla.png">
       <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
     
     
       
-        <title>Troubleshooting - UI-CLI</title>
+        <title>Claude Desktop - UI-CLI</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
       
       
 
@@ -53,7 +53,7 @@
       
     
     
-    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#troubleshooting" class="md-skip">
+        <a href="#claude-desktop-integration" class="md-skip">
           Skip to content
         </a>
       
@@ -94,9 +94,9 @@
 
 <header class="md-header md-header--shadow" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href=".." title="UI-CLI" class="md-header__button md-logo" aria-label="UI-CLI" data-md-component="logo">
+    <a href="../.." title="UI-CLI" class="md-header__button md-logo" aria-label="UI-CLI" data-md-component="logo">
       
-  <img src="../assets/gorilla.png" alt="logo">
+  <img src="../../assets/gorilla.png" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -113,7 +113,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Troubleshooting
+              Claude Desktop
             
           </span>
         </div>
@@ -234,9 +234,9 @@
 
 <nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href=".." title="UI-CLI" class="md-nav__button md-logo" aria-label="UI-CLI" data-md-component="logo">
+    <a href="../.." title="UI-CLI" class="md-nav__button md-logo" aria-label="UI-CLI" data-md-component="logo">
       
-  <img src="../assets/gorilla.png" alt="logo">
+  <img src="../../assets/gorilla.png" alt="logo">
 
     </a>
     UI-CLI
@@ -263,7 +263,7 @@
   
   
     <li class="md-nav__item">
-      <a href=".." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         
   
   
@@ -290,7 +290,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../getting-started/" class="md-nav__link">
+      <a href="../../getting-started/" class="md-nav__link">
         
   
   
@@ -317,7 +317,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../installation/" class="md-nav__link">
+      <a href="../../installation/" class="md-nav__link">
         
   
   
@@ -344,7 +344,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../configuration/" class="md-nav__link">
+      <a href="../../configuration/" class="md-nav__link">
         
   
   
@@ -368,8 +368,10 @@
       
   
   
+    
   
   
+  
     
     
     
@@ -380,13 +382,11 @@
       
     
     
-    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
       
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
           <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
@@ -407,7 +407,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
@@ -425,7 +425,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/" class="md-nav__link">
+      <a href="../" class="md-nav__link">
         
   
   
@@ -453,7 +453,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/cloud/" class="md-nav__link">
+      <a href="../cloud/" class="md-nav__link">
         
   
   
@@ -481,7 +481,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../commands/local/" class="md-nav__link">
+      <a href="../local/" class="md-nav__link">
         
   
   
@@ -506,68 +506,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../commands/mcp/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Claude Desktop
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../examples/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-    Examples
-  
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
     
   
   
@@ -587,7 +525,7 @@
   <span class="md-ellipsis">
     
   
-    Troubleshooting
+    Claude Desktop
   
 
     
@@ -605,7 +543,7 @@
   <span class="md-ellipsis">
     
   
-    Troubleshooting
+    Claude Desktop
   
 
     
@@ -631,22 +569,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cloud-api-issues" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cloud API Issues
+        Overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Cloud API Issues">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#api-key-not-configured" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "API key not configured"
+        Prerequisites
       
     </span>
   </a>
@@ -654,21 +614,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#invalid-api-key" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Invalid API key"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-timeout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Connection timeout"
+        Setup
       
     </span>
   </a>
@@ -681,22 +630,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-controller-issues" class="md-nav__link">
+  <a href="#available-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Controller Issues
+        Available Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Local Controller Issues">
+    <nav class="md-nav" aria-label="Available Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#controller-url-not-configured" class="md-nav__link">
+  <a href="#status-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Controller URL not configured"
+        Status &amp; Health
       
     </span>
   </a>
@@ -704,10 +653,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#invalid-username-or-password" class="md-nav__link">
+  <a href="#counts-lists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Invalid username or password"
+        Counts &amp; Lists
       
     </span>
   </a>
@@ -715,10 +664,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ssl-certificate-verify-failed" class="md-nav__link">
+  <a href="#lookups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "SSL certificate verify failed"
+        Lookups
       
     </span>
   </a>
@@ -726,21 +675,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#connection-refused" class="md-nav__link">
+  <a href="#actions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Connection refused"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#session-expired" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Session expired"
+        Actions
       
     </span>
   </a>
@@ -753,22 +691,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clientdevice-issues" class="md-nav__link">
+  <a href="#example-conversations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Client/Device Issues
+        Example Conversations
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Client/Device Issues">
+    <nav class="md-nav" aria-label="Example Conversations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#client-not-found" class="md-nav__link">
+  <a href="#checking-network-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Client not found"
+        Checking Network Status
       
     </span>
   </a>
@@ -776,10 +714,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#device-not-found" class="md-nav__link">
+  <a href="#managing-clients" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Device not found"
+        Managing Clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Management
       
     </span>
   </a>
@@ -792,22 +741,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dpi-issues" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DPI Issues
+        Troubleshooting
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DPI Issues">
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dpi-unavailable" class="md-nav__link">
+  <a href="#tools-not-appearing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "DPI unavailable"
+        Tools Not Appearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conda-environment-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Conda environment not found"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Logs
       
     </span>
   </a>
@@ -820,147 +802,49 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-issues" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Issues
+        Configuration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Output Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#json-output-is-empty" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JSON Output is Empty
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#table-output-truncated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Table Output Truncated
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation-issues" class="md-nav__link">
+  <a href="#security-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation Issues
+        Security Notes
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Installation Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#modulenotfounderror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "ModuleNotFoundError"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#command-not-found-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Command not found: ui"
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
+  <a href="#version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Help
+        Version
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Getting Help">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#check-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check Version
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#command-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Command Help
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#debug-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Debug Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#report-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Report Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
     </ul>
   
 </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
       
     </li>
   
@@ -973,7 +857,61 @@
   
   
     <li class="md-nav__item">
-      <a href="../changelog/" class="md-nav__link">
+      <a href="../../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../changelog/" class="md-nav__link">
         
   
   
@@ -1020,22 +958,44 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#cloud-api-issues" class="md-nav__link">
+  <a href="#overview" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cloud API Issues
+        Overview
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Cloud API Issues">
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installation">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#api-key-not-configured" class="md-nav__link">
+  <a href="#prerequisites" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "API key not configured"
+        Prerequisites
       
     </span>
   </a>
@@ -1043,21 +1003,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#invalid-api-key" class="md-nav__link">
+  <a href="#setup" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Invalid API key"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#connection-timeout" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Connection timeout"
+        Setup
       
     </span>
   </a>
@@ -1070,22 +1019,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-controller-issues" class="md-nav__link">
+  <a href="#available-tools" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Local Controller Issues
+        Available Tools
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Local Controller Issues">
+    <nav class="md-nav" aria-label="Available Tools">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#controller-url-not-configured" class="md-nav__link">
+  <a href="#status-health" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Controller URL not configured"
+        Status &amp; Health
       
     </span>
   </a>
@@ -1093,10 +1042,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#invalid-username-or-password" class="md-nav__link">
+  <a href="#counts-lists" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Invalid username or password"
+        Counts &amp; Lists
       
     </span>
   </a>
@@ -1104,10 +1053,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#ssl-certificate-verify-failed" class="md-nav__link">
+  <a href="#lookups" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "SSL certificate verify failed"
+        Lookups
       
     </span>
   </a>
@@ -1115,21 +1064,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#connection-refused" class="md-nav__link">
+  <a href="#actions" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Connection refused"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#session-expired" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Session expired"
+        Actions
       
     </span>
   </a>
@@ -1142,22 +1080,22 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#clientdevice-issues" class="md-nav__link">
+  <a href="#example-conversations" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Client/Device Issues
+        Example Conversations
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Client/Device Issues">
+    <nav class="md-nav" aria-label="Example Conversations">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#client-not-found" class="md-nav__link">
+  <a href="#checking-network-status" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Client not found"
+        Checking Network Status
       
     </span>
   </a>
@@ -1165,10 +1103,21 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#device-not-found" class="md-nav__link">
+  <a href="#managing-clients" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "Device not found"
+        Managing Clients
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#device-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Device Management
       
     </span>
   </a>
@@ -1181,22 +1130,55 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#dpi-issues" class="md-nav__link">
+  <a href="#troubleshooting" class="md-nav__link">
     <span class="md-ellipsis">
       
-        DPI Issues
+        Troubleshooting
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="DPI Issues">
+    <nav class="md-nav" aria-label="Troubleshooting">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#dpi-unavailable" class="md-nav__link">
+  <a href="#tools-not-appearing" class="md-nav__link">
     <span class="md-ellipsis">
       
-        "DPI unavailable"
+        Tools Not Appearing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conda-environment-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Conda environment not found"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#timeout-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Timeout Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-logs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Logs
       
     </span>
   </a>
@@ -1209,141 +1191,35 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#output-issues" class="md-nav__link">
+  <a href="#configuration" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Output Issues
+        Configuration
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Output Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#json-output-is-empty" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        JSON Output is Empty
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#table-output-truncated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Table Output Truncated
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#installation-issues" class="md-nav__link">
+  <a href="#security-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Installation Issues
+        Security Notes
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Installation Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#modulenotfounderror" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "ModuleNotFoundError"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#command-not-found-ui" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        "Command not found: ui"
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
+  <a href="#version" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Getting Help
+        Version
       
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="Getting Help">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#check-version" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Check Version
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#command-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Command Help
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#debug-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Debug Mode
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#report-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Report Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -1367,173 +1243,244 @@
   
 
 
-<h1 id="troubleshooting">Troubleshooting</h1>
-<p>Common issues and solutions.</p>
-<h2 id="cloud-api-issues">Cloud API Issues</h2>
-<h3 id="api-key-not-configured">"API key not configured"</h3>
-<p><strong>Problem:</strong> Missing or empty <code>UNIFI_API_KEY</code> in <code>.env</code></p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Check if .env exists</span>
-<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>cat<span class="w"> </span>.env<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>UNIFI_API_KEY
-<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="c1"># Add your API key</span>
-<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;UNIFI_API_KEY=your-key-here&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
-</code></pre></div></p>
-<h3 id="invalid-api-key">"Invalid API key"</h3>
-<p><strong>Problem:</strong> API key is incorrect or expired</p>
-<p><strong>Solution:</strong></p>
-<ol>
-<li>Go to <a href="https://unifi.ui.com">unifi.ui.com</a></li>
-<li>Navigate to <strong>Settings</strong> → <strong>API</strong></li>
-<li>Delete the old key and create a new one</li>
-<li>Update <code>.env</code> with the new key</li>
-</ol>
-<h3 id="connection-timeout">"Connection timeout"</h3>
-<p><strong>Problem:</strong> Cannot reach <code>api.ui.com</code></p>
-<p><strong>Solution:</strong></p>
+<h1 id="claude-desktop-integration">Claude Desktop Integration</h1>
+<p>Control your UniFi network using natural language through Claude Desktop.</p>
+<h2 id="overview">Overview</h2>
+<p>UI-CLI includes an MCP (Model Context Protocol) server that enables Claude Desktop to manage your UniFi infrastructure. Ask questions like:</p>
 <ul>
-<li>Check internet connectivity</li>
-<li>Verify firewall allows outbound HTTPS</li>
-<li>Try: <code>curl -I https://api.ui.com</code></li>
+<li>"How many devices are connected to my network?"</li>
+<li>"What's my network health status?"</li>
+<li>"Block the kids iPad"</li>
+<li>"Restart the garage access point"</li>
 </ul>
-<hr />
-<h2 id="local-controller-issues">Local Controller Issues</h2>
-<h3 id="controller-url-not-configured">"Controller URL not configured"</h3>
-<p><strong>Problem:</strong> Missing <code>UNIFI_CONTROLLER_URL</code> in <code>.env</code></p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Add your controller URL</span>
-<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;UNIFI_CONTROLLER_URL=https://192.168.1.1&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
-</code></pre></div></p>
-<h3 id="invalid-username-or-password">"Invalid username or password"</h3>
-<p><strong>Problem:</strong> Credentials don't match controller</p>
-<p><strong>Solution:</strong></p>
-<ol>
-<li>Verify credentials work in the UniFi web UI</li>
-<li>Use a <strong>local admin account</strong> (not Ubiquiti SSO)</li>
-<li>Check for typos in <code>.env</code></li>
-</ol>
-<div class="admonition warning">
-<p class="admonition-title">SSO vs Local Accounts</p>
-<p>UI-CLI requires a <strong>local admin account</strong>. Ubiquiti SSO accounts won't work for direct controller access.</p>
-</div>
-<h3 id="ssl-certificate-verify-failed">"SSL certificate verify failed"</h3>
-<p><strong>Problem:</strong> Controller uses self-signed certificate</p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Disable SSL verification</span>
-<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;UNIFI_CONTROLLER_VERIFY_SSL=false&#39;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>.env
-</code></pre></div></p>
-<h3 id="connection-refused">"Connection refused"</h3>
-<p><strong>Problem:</strong> Cannot connect to controller</p>
-<p><strong>Solution:</strong></p>
-<ul>
-<li>Verify controller URL is correct</li>
-<li>Check controller is running</li>
-<li>Ensure network access to controller</li>
-<li>Try: <code>curl -k https://192.168.1.1</code></li>
-</ul>
-<h3 id="session-expired">"Session expired"</h3>
-<p><strong>Problem:</strong> Cached session is no longer valid</p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># Delete cached session</span>
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>rm<span class="w"> </span>~/.config/ui-cli/session.json
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="c1"># Try again</span>
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>./ui<span class="w"> </span>lo<span class="w"> </span>health
-</code></pre></div></p>
-<hr />
-<h2 id="clientdevice-issues">Client/Device Issues</h2>
-<h3 id="client-not-found">"Client not found"</h3>
-<p><strong>Problem:</strong> Client name or MAC not recognized</p>
-<p><strong>Solution:</strong></p>
-<ul>
-<li>Try partial name match: <code>./ui lo clients get iPhone</code></li>
-<li>Use MAC address: <code>./ui lo clients get AA:BB:CC:DD:EE:FF</code></li>
-<li>List all clients: <code>./ui lo clients all</code></li>
-</ul>
-<h3 id="device-not-found">"Device not found"</h3>
-<p><strong>Problem:</strong> Device identifier not recognized</p>
-<p><strong>Solution:</strong></p>
-<ul>
-<li>List devices first: <code>./ui lo devices list</code></li>
-<li>Try by MAC: <code>./ui lo devices get 70:a7:41:xx:xx:xx</code></li>
-<li>Try by ID: <code>./ui lo devices get device-001</code></li>
-</ul>
-<hr />
-<h2 id="dpi-issues">DPI Issues</h2>
-<h3 id="dpi-unavailable">"DPI unavailable"</h3>
-<p><strong>Problem:</strong> DPI is not enabled on the controller</p>
-<p><strong>Solution:</strong></p>
-<ol>
-<li>Open UniFi web UI</li>
-<li>Go to <strong>Settings</strong> → <strong>Traffic &amp; Security</strong> → <strong>Deep Packet Inspection</strong></li>
-<li>Enable DPI</li>
-<li>Wait a few hours for data to populate</li>
-</ol>
-<hr />
-<h2 id="output-issues">Output Issues</h2>
-<h3 id="json-output-is-empty">JSON Output is Empty</h3>
-<p><strong>Problem:</strong> Command returns <code>[]</code> or <code>{}</code></p>
-<p><strong>Possible Causes:</strong></p>
-<ul>
-<li>No data available (e.g., no vouchers created)</li>
-<li>Filter too restrictive</li>
-<li>API returned empty response</li>
-</ul>
-<p><strong>Debug:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Remove filters and try verbose</span>
-<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>./ui<span class="w"> </span>lo<span class="w"> </span>clients<span class="w"> </span>list<span class="w"> </span>-v
-<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>./ui<span class="w"> </span>lo<span class="w"> </span>vouchers<span class="w"> </span>list<span class="w"> </span>-v
-</code></pre></div></p>
-<h3 id="table-output-truncated">Table Output Truncated</h3>
-<p><strong>Problem:</strong> Long values cut off in table view</p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Use JSON for full data</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>./ui<span class="w"> </span>devices<span class="w"> </span>list<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.[0]&#39;</span>
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or CSV</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>./ui<span class="w"> </span>devices<span class="w"> </span>list<span class="w"> </span>-o<span class="w"> </span>csv
-</code></pre></div></p>
-<hr />
-<h2 id="installation-issues">Installation Issues</h2>
-<h3 id="modulenotfounderror">"ModuleNotFoundError"</h3>
-<p><strong>Problem:</strong> Python dependencies not installed</p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="c1"># or</span>
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-</code></pre></div></p>
-<h3 id="command-not-found-ui">"Command not found: ui"</h3>
-<p><strong>Problem:</strong> CLI not in PATH</p>
-<p><strong>Solution:</strong>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Use the wrapper script</span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>./ui<span class="w"> </span>--help
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Or add to PATH after pip install</span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>which<span class="w"> </span>ui
-</code></pre></div></p>
-<hr />
-<h2 id="getting-help">Getting Help</h2>
-<h3 id="check-version">Check Version</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./ui<span class="w"> </span>version
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>┌─────────────────┐
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>│  Claude Desktop │
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>└────────┬────────┘
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>         │ MCP Protocol (stdio)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>         ▼
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>┌─────────────────┐
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>│   MCP Server    │  ← 16 AI-optimized tools
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>│   (ui_mcp)      │
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>└────────┬────────┘
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         │ subprocess
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>         ▼
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>┌─────────────────┐
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>│    UI CLI       │  ← All business logic
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>│   (ui_cli)      │
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>└─────────────────┘
 </code></pre></div>
-<h3 id="command-help">Command Help</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>./ui<span class="w"> </span>--help
-<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>./ui<span class="w"> </span>lo<span class="w"> </span>--help
-<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>./ui<span class="w"> </span>lo<span class="w"> </span>clients<span class="w"> </span>--help
-</code></pre></div>
-<h3 id="debug-mode">Debug Mode</h3>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># See what&#39;s happening</span>
-<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>./ui<span class="w"> </span>lo<span class="w"> </span>health<span class="w"> </span>-v
-</code></pre></div>
-<h3 id="report-issues">Report Issues</h3>
-<p>Found a bug? <a href="https://github.com/vedanta/ui-cli/issues">Open an issue on GitHub</a></p>
-<p>Include:</p>
+<h2 id="installation">Installation</h2>
+<h3 id="prerequisites">Prerequisites</h3>
 <ul>
-<li>UI-CLI version (<code>./ui version</code>)</li>
-<li>Controller type (UDM, Cloud Key, etc.)</li>
-<li>Error message</li>
-<li>Steps to reproduce</li>
+<li>Python 3.11+ with conda environment <code>ui-cli</code></li>
+<li>Claude Desktop installed</li>
+<li>UniFi credentials configured in <code>.env</code></li>
 </ul>
+<h3 id="setup">Setup</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1"># Install MCP server to Claude Desktop</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>./ui<span class="w"> </span>mcp<span class="w"> </span>install
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1"># Verify installation</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>./ui<span class="w"> </span>mcp<span class="w"> </span>check
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="c1"># View current config</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>./ui<span class="w"> </span>mcp<span class="w"> </span>show
+</code></pre></div>
+<p>After installation, restart Claude Desktop to load the new tools.</p>
+<h2 id="available-tools">Available Tools</h2>
+<h3 id="status-health">Status &amp; Health</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Example Prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>network_status</code></td>
+<td>Check API connectivity</td>
+<td>"Is my network API working?"</td>
+</tr>
+<tr>
+<td><code>network_health</code></td>
+<td>Site health summary</td>
+<td>"What's my network health?"</td>
+</tr>
+<tr>
+<td><code>internet_speed</code></td>
+<td>Last speed test result</td>
+<td>"What's my internet speed?"</td>
+</tr>
+<tr>
+<td><code>run_speedtest</code></td>
+<td>Run new speed test</td>
+<td>"Run a speed test"</td>
+</tr>
+<tr>
+<td><code>isp_performance</code></td>
+<td>ISP metrics over time</td>
+<td>"How's my ISP been performing?"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="counts-lists">Counts &amp; Lists</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Example Prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>client_count</code></td>
+<td>Count clients by category</td>
+<td>"How many devices are connected?"</td>
+</tr>
+<tr>
+<td><code>device_list</code></td>
+<td>List UniFi devices</td>
+<td>"What UniFi devices do I have?"</td>
+</tr>
+<tr>
+<td><code>network_list</code></td>
+<td>List networks/VLANs</td>
+<td>"Show my networks"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lookups">Lookups</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Example Prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>find_client</code></td>
+<td>Find client by name/MAC</td>
+<td>"Find my iPhone"</td>
+</tr>
+<tr>
+<td><code>find_device</code></td>
+<td>Find device by name/MAC/IP</td>
+<td>"Show the living room AP"</td>
+</tr>
+<tr>
+<td><code>client_status</code></td>
+<td>Check if client is online/blocked</td>
+<td>"Is the TV online?"</td>
+</tr>
+</tbody>
+</table>
+<h3 id="actions">Actions</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Description</th>
+<th>Example Prompt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>block_client</code></td>
+<td>Block from network</td>
+<td>"Block the kids iPad"</td>
+</tr>
+<tr>
+<td><code>unblock_client</code></td>
+<td>Restore access</td>
+<td>"Unblock the kids iPad"</td>
+</tr>
+<tr>
+<td><code>kick_client</code></td>
+<td>Force disconnect</td>
+<td>"Disconnect my laptop"</td>
+</tr>
+<tr>
+<td><code>restart_device</code></td>
+<td>Reboot device</td>
+<td>"Restart the garage AP"</td>
+</tr>
+<tr>
+<td><code>create_voucher</code></td>
+<td>Create guest WiFi code</td>
+<td>"Create a guest WiFi voucher"</td>
+</tr>
+</tbody>
+</table>
+<h2 id="example-conversations">Example Conversations</h2>
+<h3 id="checking-network-status">Checking Network Status</h3>
+<blockquote>
+<p><strong>You:</strong> How many devices are connected to my network?</p>
+<p><strong>Claude:</strong> You have 87 devices connected:
+- 17 wired clients
+- 70 wireless clients
+- 52 on WiFi 6, 18 on WiFi 5</p>
+</blockquote>
+<h3 id="managing-clients">Managing Clients</h3>
+<blockquote>
+<p><strong>You:</strong> Block the kids iPad</p>
+<p><strong>Claude:</strong> I'll block that device. Looking for "kids iPad"...</p>
+<p>Found: Kids-iPad (MAC: aa<img alt="🇧🇧" class="twemoji" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/1f1e7-1f1e7.svg" title=":bb:" />cc:dd:ee:ff)</p>
+<p>Done! Kids-iPad has been blocked from the network.</p>
+</blockquote>
+<h3 id="device-management">Device Management</h3>
+<blockquote>
+<p><strong>You:</strong> Restart the garage access point</p>
+<p><strong>Claude:</strong> I'll restart that device. Looking for "garage"...</p>
+<p>Found: Garage-AP (U6-Lite)</p>
+<p>Restart initiated. The access point will be back online in about 2 minutes.</p>
+</blockquote>
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="tools-not-appearing">Tools Not Appearing</h3>
+<ol>
+<li>Restart Claude Desktop after running <code>./ui mcp install</code></li>
+<li>Check that <code>.env</code> file exists with credentials</li>
+<li>Run <code>./ui mcp check</code> to verify setup</li>
+</ol>
+<h3 id="conda-environment-not-found">"Conda environment not found"</h3>
+<p>Ensure the conda environment is activated when installing:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>ui-cli
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>./ui<span class="w"> </span>mcp<span class="w"> </span>install
+</code></pre></div>
+<h3 id="timeout-errors">Timeout Errors</h3>
+<p>Some operations like speed tests take longer. Claude will wait up to 60 seconds for these operations.</p>
+<h3 id="view-logs">View Logs</h3>
+<p>Check MCP server logs in Claude Desktop:</p>
+<ul>
+<li><strong>macOS:</strong> <code>~/Library/Logs/Claude/mcp*.log</code></li>
+</ul>
+<h2 id="configuration">Configuration</h2>
+<p>The installer adds this to Claude Desktop's config (<code>~/Library/Application Support/Claude/claude_desktop_config.json</code>):</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">{</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;mcpServers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;ui-cli&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">      </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/ui-cmd/scripts/mcp-server.sh&quot;</span><span class="p">,</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">      </span><span class="nt">&quot;args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[],</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">      </span><span class="nt">&quot;env&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">        </span><span class="nt">&quot;PYTHON_PATH&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/path/to/conda/envs/ui-cli/bin/python&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">}</span>
+</code></pre></div>
+<h2 id="security-notes">Security Notes</h2>
+<ul>
+<li>Credentials are stored in <code>.env</code> file (not in Claude Desktop config)</li>
+<li>Claude will ask for confirmation before performing destructive actions</li>
+<li>All operations are logged</li>
+</ul>
+<h2 id="version">Version</h2>
+<p>Current MCP Server version: <strong>0.2.0</strong> (Tools Layer Architecture)</p>
 
 
 
@@ -1604,10 +1551,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.sections", "navigation.expand", "navigation.top", "search.highlight", "search.share", "content.code.copy", "content.code.annotate"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
       
     
   </body>
