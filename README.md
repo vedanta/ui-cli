@@ -1245,7 +1245,7 @@ rm ~/.config/ui-cli/session.json
 |----------|-------------|
 | [Online Documentation](https://vedanta.github.io/ui-cli) | Full documentation site |
 | [User Guide](USERGUIDE.md) | Detailed usage examples |
-| [Client Groups](https://vedanta.github.io/ui-cli/groups/) | Groups feature guide |
+| [Client Groups](docs/groups.md) | Groups feature guide |
 | [MCP Server](src/ui_mcp/README.md) | Claude Desktop integration |
 | [MCP Architecture](src/ui_mcp/ARCHITECTURE.md) | Technical design |
 | [Roadmap](ROADMAP.md) | Planned features |
