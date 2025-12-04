@@ -495,6 +495,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#data-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#session-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -502,6 +514,22 @@
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -660,6 +688,34 @@
     
   
     Local Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Client Groups
   
 
     
@@ -905,6 +961,18 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#data-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Storage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Storage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
   <a href="#session-management" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -912,6 +980,22 @@
       
     </span>
   </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#groups-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Groups Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1043,10 +1127,29 @@
 <a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="nv">UNIFI_CONTROLLER_SITE</span><span class="o">=</span>default
 <a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nv">UNIFI_CONTROLLER_VERIFY_SSL</span><span class="o">=</span><span class="nb">false</span>
 </code></pre></div>
-<h2 id="session-management">Session Management</h2>
+<h2 id="data-storage">Data Storage</h2>
+<p>UI-CLI stores local data in <code>~/.config/ui-cli/</code>:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>session.json</code></td>
+<td>Cached controller login session</td>
+</tr>
+<tr>
+<td><code>groups.json</code></td>
+<td>Client groups definitions</td>
+</tr>
+</tbody>
+</table>
+<h3 id="session-management">Session Management</h3>
 <p>Local controller sessions are cached to avoid repeated logins:</p>
 <ul>
-<li>Session file: <code>~/.config/ui-cli/session.json</code></li>
 <li>Auto-refreshes on expiry</li>
 <li>Delete to force re-login</li>
 </ul>
@@ -1054,21 +1157,32 @@
 <a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>rm<span class="w"> </span>~/.config/ui-cli/session.json
 <a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>./ui<span class="w"> </span>lo<span class="w"> </span>health
 </code></pre></div>
+<h3 id="groups-storage">Groups Storage</h3>
+<p>Client groups are stored locally and don't require a network connection to manage:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># View groups file location</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>ls<span class="w"> </span>~/.config/ui-cli/groups.json
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Backup groups</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cp<span class="w"> </span>~/.config/ui-cli/groups.json<span class="w"> </span>~/groups-backup.json
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="c1"># Or use the export command</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>./ui<span class="w"> </span>groups<span class="w"> </span><span class="nb">export</span><span class="w"> </span>-o<span class="w"> </span>~/groups-backup.json
+</code></pre></div>
 <h2 id="multiple-sites">Multiple Sites</h2>
 <p>To switch between sites on the same controller:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Edit .env</span>
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="nv">UNIFI_CONTROLLER_SITE</span><span class="o">=</span>office
-<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
-<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># Or use a different .env file</span>
-<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>cp<span class="w"> </span>.env<span class="w"> </span>.env.office
-<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="c1"># Edit .env.office with different site</span>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Edit .env</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nv">UNIFI_CONTROLLER_SITE</span><span class="o">=</span>office
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Or use a different .env file</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>cp<span class="w"> </span>.env<span class="w"> </span>.env.office
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="c1"># Edit .env.office with different site</span>
 </code></pre></div>
 <h2 id="verify-configuration">Verify Configuration</h2>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># Check Cloud API</span>
-<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>./ui<span class="w"> </span>status
-<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
-<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="c1"># Check Local Controller</span>
-<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>./ui<span class="w"> </span>lo<span class="w"> </span>health
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Check Cloud API</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>./ui<span class="w"> </span>status
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="c1"># Check Local Controller</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>./ui<span class="w"> </span>lo<span class="w"> </span>health
 </code></pre></div>
 
 

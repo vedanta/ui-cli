@@ -532,6 +532,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#client-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#claude-desktop-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -632,6 +643,34 @@
     
   
     Local Controller
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../groups/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Client Groups
   
 
     
@@ -833,6 +872,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#client-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#claude-desktop-mcp" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -902,10 +952,11 @@
 
 
 <h1 id="command-reference">Command Reference</h1>
-<p>UI-CLI provides three interfaces:</p>
+<p>UI-CLI provides four interfaces:</p>
 <ul>
 <li><strong>Cloud API</strong> - Commands via <code>api.ui.com</code> for multi-site management</li>
 <li><strong>Local Controller</strong> - Direct connection to your controller for real-time operations</li>
+<li><strong>Client Groups</strong> - Create named groups for bulk actions (parental controls, IoT management)</li>
 <li><strong>Claude Desktop</strong> - Natural language control via MCP integration</li>
 </ul>
 <h2 id="command-tree">Command Tree</h2>
@@ -918,8 +969,9 @@
 <a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>├── devices             # Cloud: manage devices
 <a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>├── isp                 # Cloud: ISP metrics
 <a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>├── sdwan               # Cloud: SD-WAN configs
-<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── local (lo)          # Local controller commands
-<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>└── mcp                  # Claude Desktop integration
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>├── groups              # Client groups for bulk actions
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>├── local (lo)          # Local controller commands
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>└── mcp                 # Claude Desktop integration
 </code></pre></div>
 <h2 id="quick-reference">Quick Reference</h2>
 <h3 id="cloud-api">Cloud API</h3>
@@ -1016,6 +1068,50 @@
 </tr>
 </tbody>
 </table>
+<h3 id="client-groups">Client Groups</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>./ui groups list</code></td>
+<td>List all groups</td>
+</tr>
+<tr>
+<td><code>./ui groups create "Name"</code></td>
+<td>Create static group</td>
+</tr>
+<tr>
+<td><code>./ui groups auto "Name" --vendor "Apple"</code></td>
+<td>Create auto group</td>
+</tr>
+<tr>
+<td><code>./ui groups add &lt;group&gt; &lt;MAC&gt;</code></td>
+<td>Add member to group</td>
+</tr>
+<tr>
+<td><code>./ui groups show &lt;group&gt;</code></td>
+<td>Show group details</td>
+</tr>
+<tr>
+<td><code>./ui lo clients list -g &lt;group&gt;</code></td>
+<td>List clients in group</td>
+</tr>
+<tr>
+<td><code>./ui lo clients block -g &lt;group&gt;</code></td>
+<td>Block all in group</td>
+</tr>
+<tr>
+<td><code>./ui lo clients unblock -g &lt;group&gt;</code></td>
+<td>Unblock all in group</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="../groups/">Client Groups</a> for full documentation.</p>
 <h3 id="claude-desktop-mcp">Claude Desktop (MCP)</h3>
 <table>
 <thead>
@@ -1040,6 +1136,10 @@
 <tr>
 <td><code>block_client</code></td>
 <td>Block a client</td>
+</tr>
+<tr>
+<td><code>block_group</code></td>
+<td>Block all clients in a group</td>
 </tr>
 <tr>
 <td><code>restart_device</code></td>
