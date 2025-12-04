@@ -656,15 +656,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#030-december-2-2024" class="md-nav__link">
+  <a href="#030-december-3-2024" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [0.3.0] - December 2, 2024
+        [0.3.0] - December 3, 2024
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[0.3.0] - December 2, 2024">
+    <nav class="md-nav" aria-label="[0.3.0] - December 3, 2024">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -879,15 +879,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#030-december-2-2024" class="md-nav__link">
+  <a href="#030-december-3-2024" class="md-nav__link">
     <span class="md-ellipsis">
       
-        [0.3.0] - December 2, 2024
+        [0.3.0] - December 3, 2024
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="[0.3.0] - December 2, 2024">
+    <nav class="md-nav" aria-label="[0.3.0] - December 3, 2024">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1090,9 +1090,10 @@
 <h1 id="changelog">Changelog</h1>
 <p>All notable changes to UI-CLI are documented here.</p>
 <hr />
-<h2 id="030-december-2-2024">[0.3.0] - December 2, 2024</h2>
+<h2 id="030-december-3-2024">[0.3.0] - December 3, 2024</h2>
 <h3 id="highlights">Highlights</h3>
 <p>🤖 <strong>Claude Desktop Integration</strong> - Manage your UniFi network using natural language!</p>
+<p>⚡ <strong>Quick Timeout &amp; Spinners</strong> - Better UX for local commands with progress indicators!</p>
 <h3 id="added">Added</h3>
 <p><strong>MCP Server v2 (Tools Layer Architecture)</strong></p>
 <ul>
@@ -1135,10 +1136,20 @@
 <li>CLI remains single source of truth</li>
 <li>JSON output for all action commands</li>
 </ul>
+<p><strong>Quick Timeout &amp; Spinners</strong></p>
+<ul>
+<li><code>--quick</code> / <code>-q</code> option for 5-second timeout on connectivity checks</li>
+<li><code>--timeout</code> / <code>-t</code> option for custom timeout values</li>
+<li>Spinners on all local commands for better UX</li>
+<li>Default timeout reduced from 30s to 15s</li>
+<li><code>UNIFI_NO_SPINNER</code> env var for CI/CD environments</li>
+<li>Auto-disable spinners when <code>CI=true</code> or <code>NO_COLOR</code> is set</li>
+</ul>
 <h3 id="documentation">Documentation</h3>
 <ul>
 <li>Claude Desktop integration guide</li>
 <li>MCP architecture documentation</li>
+<li>Updated README with timeout options and CI/CD usage</li>
 </ul>
 <hr />
 <h2 id="020-december-1-2024">[0.2.0] - December 1, 2024</h2>
