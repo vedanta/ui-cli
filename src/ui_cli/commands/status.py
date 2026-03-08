@@ -153,7 +153,7 @@ async def check_local_controller(verbose: bool = False) -> dict:
     try:
         client = UniFiLocalClient(timeout=STATUS_CHECK_TIMEOUT)
         start = time.perf_counter()
-        await client.login()
+        await client.ensure_authenticated()
         elapsed_ms = (time.perf_counter() - start) * 1000
 
         result["connection"] = "OK"
