@@ -46,6 +46,11 @@ UNIFI_CONTROLLER_URL=https://192.168.1.1
 UNIFI_CONTROLLER_USERNAME=admin
 UNIFI_CONTROLLER_PASSWORD=yourpassword
 
+# Optional: TOTP code for MFA-enabled accounts (UDM-style controllers only)
+# Codes expire in ~30s; only needed for the initial login since the
+# session is cached for ~24 hours afterwards.
+UNIFI_CONTROLLER_TOTP=123456
+
 # Optional: Site name (default: "default")
 UNIFI_CONTROLLER_SITE=default
 

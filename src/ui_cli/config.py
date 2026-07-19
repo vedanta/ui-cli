@@ -53,7 +53,7 @@ class Settings(BaseSettings):
     )
     controller_totp: str = Field(
         default="",
-        description="TOTP code for MFA-enabled accounts",
+        description="TOTP code for MFA-enabled accounts (UDM-style controllers only)",
     )
 
     @property

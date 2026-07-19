@@ -136,6 +136,7 @@ async def check_local_controller(verbose: bool = False) -> dict:
         "connection": None,
         "connection_time_ms": None,
         "authentication": None,
+        "auth_cached": False,
         "error": None,
         "controller_type": None,
         "clients_count": None,
@@ -153,12 +154,13 @@ async def check_local_controller(verbose: bool = False) -> dict:
     try:
         client = UniFiLocalClient(timeout=STATUS_CHECK_TIMEOUT)
         start = time.perf_counter()
-        await client.ensure_authenticated()
+        fresh_login = await client.ensure_authenticated()
         elapsed_ms = (time.perf_counter() - start) * 1000
 
         result["connection"] = "OK"
         result["connection_time_ms"] = round(elapsed_ms, 1)
         result["authentication"] = "Valid"
+        result["auth_cached"] = not fresh_login
         result["controller_type"] = "UDM" if client._is_udm else "Cloud Key/Self-hosted"
 
         # Get counts
@@ -283,7 +285,12 @@ def print_status_table(cloud_status: dict, local_status: dict | None = None) -> 
 
         # Authentication status
         if local_status["authentication"] == "Valid":
-            local_table.add_row("Authentication:", "[green]Valid[/green]")
+            if local_status.get("auth_cached"):
+                local_table.add_row(
+                    "Authentication:", "[green]Valid[/green] [dim](cached session)[/dim]"
+                )
+            else:
+                local_table.add_row("Authentication:", "[green]Valid[/green]")
         elif local_status["authentication"] == "FAILED":
             local_table.add_row("Authentication:", "[red]FAILED[/red]")
         else:

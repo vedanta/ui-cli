@@ -24,6 +24,7 @@ class TestUniFiLocalClientInit:
             mock.controller_password = "password"
             mock.controller_site = "default"
             mock.controller_verify_ssl = False
+            mock.controller_totp = ""
             mock.timeout = 30
             mock.session_file = MagicMock()
             mock.session_file.exists.return_value = False
@@ -74,6 +75,7 @@ class TestUniFiLocalClientMethods:
             mock.controller_password = "password"
             mock.controller_site = "default"
             mock.controller_verify_ssl = False
+            mock.controller_totp = ""
             mock.timeout = 30
             mock.session_file = MagicMock()
             mock.session_file.exists.return_value = False
@@ -203,6 +205,98 @@ class TestUniFiLocalClientMethods:
             )
 
             assert len(result) == 1
+
+
+class TestUniFiLocalClientLogin:
+    """Tests for UDM login payload and MFA/TOTP handling."""
+
+    @pytest.fixture
+    def mock_settings(self):
+        """Mock settings for testing."""
+        with patch("ui_cli.local_client.settings") as mock:
+            mock.controller_url = "https://192.168.1.1"
+            mock.controller_username = "admin"
+            mock.controller_password = "password"
+            mock.controller_site = "default"
+            mock.controller_verify_ssl = False
+            mock.controller_totp = ""
+            mock.timeout = 30
+            mock.session_file = MagicMock()
+            mock.session_file.exists.return_value = False
+            yield mock
+
+    def _mock_http_client(self, mock_client_cls, response):
+        """Wire an httpx.AsyncClient mock to return the given response."""
+        http = AsyncMock()
+        http.post.return_value = response
+        mock_client_cls.return_value.__aenter__.return_value = http
+        return http
+
+    @pytest.mark.asyncio
+    async def test_login_includes_totp_token_when_set(self, mock_settings):
+        """Test UDM login payload includes the TOTP token when configured."""
+        client = UniFiLocalClient(totp="123456")
+        client._is_udm = True
+
+        response = MagicMock(status_code=200, cookies={}, headers={})
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            http = self._mock_http_client(mock_cls, response)
+            assert await client.login() is True
+            payload = http.post.call_args.kwargs["json"]
+            assert payload["token"] == "123456"
+
+    @pytest.mark.asyncio
+    async def test_login_omits_totp_token_when_unset(self, mock_settings):
+        """Test UDM login payload omits the token field without a TOTP."""
+        client = UniFiLocalClient()
+        client._is_udm = True
+
+        response = MagicMock(status_code=200, cookies={}, headers={})
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            http = self._mock_http_client(mock_cls, response)
+            assert await client.login() is True
+            payload = http.post.call_args.kwargs["json"]
+            assert "token" not in payload
+
+    @pytest.mark.asyncio
+    async def test_login_499_without_totp_raises_required(self, mock_settings):
+        """Test HTTP 499 without a TOTP asks the user to set one."""
+        client = UniFiLocalClient()
+        client._is_udm = True
+
+        response = MagicMock(status_code=499)
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            self._mock_http_client(mock_cls, response)
+            with pytest.raises(LocalAuthenticationError, match="MFA token required"):
+                await client.login()
+
+    @pytest.mark.asyncio
+    async def test_login_499_with_totp_raises_invalid(self, mock_settings):
+        """Test HTTP 499 with a TOTP reports it as invalid or expired."""
+        client = UniFiLocalClient(totp="000000")
+        client._is_udm = True
+
+        response = MagicMock(status_code=499)
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            self._mock_http_client(mock_cls, response)
+            with pytest.raises(LocalAuthenticationError, match="invalid or expired"):
+                await client.login()
+
+    @pytest.mark.asyncio
+    async def test_ensure_authenticated_reports_cached_session(self, mock_settings):
+        """Test ensure_authenticated returns False when reusing a session."""
+        client = UniFiLocalClient()
+        with patch.object(client, "_load_session", return_value=True):
+            assert await client.ensure_authenticated() is False
+
+    @pytest.mark.asyncio
+    async def test_ensure_authenticated_reports_fresh_login(self, mock_settings):
+        """Test ensure_authenticated returns True after a fresh login."""
+        client = UniFiLocalClient()
+        with patch.object(client, "_load_session", return_value=False):
+            with patch.object(client, "login", new_callable=AsyncMock) as mock_login:
+                assert await client.ensure_authenticated() is True
+                mock_login.assert_awaited_once()
 
 
 class TestLocalClientFormatting:
