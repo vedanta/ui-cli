@@ -51,6 +51,10 @@ class Settings(BaseSettings):
         default=False,
         description="Verify SSL certificates (disable for self-signed)",
     )
+    controller_totp: str = Field(
+        default="",
+        description="TOTP code for MFA-enabled accounts (UDM-style controllers only)",
+    )
 
     @property
     def is_configured(self) -> bool:

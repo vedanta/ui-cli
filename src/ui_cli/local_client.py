@@ -64,12 +64,14 @@ class UniFiLocalClient:
         site: str | None = None,
         verify_ssl: bool | None = None,
         timeout: int | None = None,
+        totp: str | None = None,
     ):
         self.controller_url = (controller_url or settings.controller_url).rstrip("/")
         self.username = username or settings.controller_username
         self.password = password or settings.controller_password
         self.site = site or settings.controller_site
         self.verify_ssl = verify_ssl if verify_ssl is not None else settings.controller_verify_ssl
+        self.totp = totp or settings.controller_totp
 
         # Timeout priority: explicit param > --quick flag > settings
         if timeout is not None:
@@ -200,13 +202,16 @@ class UniFiLocalClient:
             try:
                 # Try UDM-style auth first
                 if self._is_udm:
+                    login_data = {
+                        "username": self.username,
+                        "password": self.password,
+                        "remember": True,
+                    }
+                    if self.totp:
+                        login_data["token"] = self.totp
                     response = await client.post(
                         f"{self.controller_url}/api/auth/login",
-                        json={
-                            "username": self.username,
-                            "password": self.password,
-                            "remember": True,
-                        },
+                        json=login_data,
                     )
 
                     if response.status_code == 200:
@@ -214,6 +219,16 @@ class UniFiLocalClient:
                         self._csrf_token = response.headers.get("X-CSRF-Token")
                         self._save_session()
                         return True
+                    elif response.status_code == 499:
+                        if self.totp:
+                            raise LocalAuthenticationError(
+                                "MFA token invalid or expired. Update "
+                                "UNIFI_CONTROLLER_TOTP with a fresh code."
+                            )
+                        raise LocalAuthenticationError(
+                            "MFA token required. Set UNIFI_CONTROLLER_TOTP "
+                            "to your current TOTP code."
+                        )
                     elif response.status_code == 403:
                         # 403 on UDM often means wrong credentials
                         raise LocalAuthenticationError(
@@ -267,10 +282,16 @@ class UniFiLocalClient:
                     f"Connection timeout to {self.controller_url}"
                 )
 
-    async def ensure_authenticated(self) -> None:
-        """Ensure we have a valid session, logging in if needed."""
-        if not self._load_session():
-            await self.login()
+    async def ensure_authenticated(self) -> bool:
+        """Ensure we have a valid session, logging in if needed.
+
+        Returns True if a fresh login was performed, False if a cached
+        session was reused.
+        """
+        if self._load_session():
+            return False
+        await self.login()
+        return True
 
     def _get_headers(self) -> dict[str, str]:
         """Get request headers with CSRF token if available."""

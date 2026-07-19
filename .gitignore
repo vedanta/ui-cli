@@ -87,3 +87,4 @@ temp/
 
 # MkDocs
 site/
+uv.lock
