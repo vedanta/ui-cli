@@ -1,0 +1,92 @@
+/* Dracula Theme for MkDocs Material */
+:root {
+  --dracula-bg: #282a36;
+  --dracula-current: #44475a;
+  --dracula-fg: #f8f8f2;
+  --dracula-comment: #6272a4;
+  --dracula-cyan: #8be9fd;
+  --dracula-green: #50fa7b;
+  --dracula-orange: #ffb86c;
+  --dracula-pink: #ff79c6;
+  --dracula-purple: #bd93f9;
+  --dracula-red: #ff5555;
+  --dracula-yellow: #f1fa8c;
+}
+
+/* Dark mode overrides */
+[data-md-color-scheme="slate"] {
+  --md-default-bg-color: var(--dracula-bg);
+  --md-default-fg-color: var(--dracula-fg);
+  --md-primary-fg-color: var(--dracula-purple);
+  --md-primary-bg-color: var(--dracula-bg);
+  --md-accent-fg-color: var(--dracula-pink);
+  --md-code-bg-color: var(--dracula-current);
+  --md-code-fg-color: var(--dracula-fg);
+  --md-typeset-a-color: var(--dracula-cyan);
+}
+
+[data-md-color-scheme="slate"] .md-header {
+  background-color: var(--dracula-bg);
+}
+
+[data-md-color-scheme="slate"] .md-tabs {
+  background-color: var(--dracula-current);
+}
+
+[data-md-color-scheme="slate"] .md-nav__link:hover {
+  color: var(--dracula-pink);
+}
+
+[data-md-color-scheme="slate"] .md-nav__link--active {
+  color: var(--dracula-cyan);
+}
+
+/* Code highlighting */
+[data-md-color-scheme="slate"] code {
+  background-color: var(--dracula-current);
+  color: var(--dracula-green);
+}
+
+[data-md-color-scheme="slate"] pre {
+  background-color: var(--dracula-current) !important;
+}
+
+/* Admonitions */
+[data-md-color-scheme="slate"] .md-typeset .admonition {
+  border-color: var(--dracula-purple);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.note {
+  border-color: var(--dracula-cyan);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.tip {
+  border-color: var(--dracula-green);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.warning {
+  border-color: var(--dracula-orange);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .admonition.danger {
+  border-color: var(--dracula-red);
+}
+
+/* Search */
+[data-md-color-scheme="slate"] .md-search__input {
+  background-color: var(--dracula-current);
+}
+
+/* Footer */
+[data-md-color-scheme="slate"] .md-footer {
+  background-color: var(--dracula-current);
+}
+
+/* Tables */
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background-color: var(--dracula-current);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tr:hover {
+  background-color: rgba(68, 71, 90, 0.5);
+}
