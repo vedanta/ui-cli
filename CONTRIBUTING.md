@@ -32,12 +32,19 @@ pytest
 # Run unit tests only
 pytest tests/unit/
 
+# Run synthetic regression tests (fake in-process UDM controller, no hardware)
+pytest tests/regression/
+
 # Run integration tests (requires real API credentials)
 pytest tests/integration/
 
 # Run with coverage
 pytest --cov=ui_cli
 ```
+
+See the [Testing docs](https://vedanta.github.io/ui-cli/testing/) for the
+full breakdown of the three test tiers and how to add synthetic regression
+scenarios.
 
 ## Development Workflow
 

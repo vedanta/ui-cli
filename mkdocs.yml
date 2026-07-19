@@ -82,5 +82,6 @@ nav:
     - Client Groups: groups.md
     - Claude Desktop: commands/mcp.md
   - Examples: examples.md
+  - Testing: testing.md
   - Troubleshooting: troubleshooting.md
   - Changelog: changelog.md
