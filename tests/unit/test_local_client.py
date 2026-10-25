@@ -283,6 +283,53 @@ class TestUniFiLocalClientLogin:
                 await client.login()
 
     @pytest.mark.asyncio
+    async def test_udm_login_401_falls_back_to_self_hosted_login(self, mock_settings):
+        """Test UDM auth 401 falls back to /api/login."""
+        client = UniFiLocalClient()
+        client._is_udm = True
+
+        udm_fail = MagicMock(status_code=401)
+        self_hosted_ok = MagicMock(status_code=200, cookies={}, headers={})
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            http = AsyncMock()
+            http.post.side_effect = [udm_fail, self_hosted_ok]
+            mock_cls.return_value.__aenter__.return_value = http
+
+            assert await client.login() is True
+            assert client._is_udm is False
+            assert http.post.call_args_list[0].args[0].endswith("/api/auth/login")
+            assert http.post.call_args_list[1].args[0].endswith("/api/login")
+
+    @pytest.mark.asyncio
+    async def test_udm_invalid_re_raised_when_self_hosted_endpoint_absent(self, mock_settings):
+        """Test UDM credential error is preserved when /api/login is missing."""
+        client = UniFiLocalClient()
+        client._is_udm = True
+
+        udm_fail = MagicMock(status_code=401)
+        self_hosted_absent = MagicMock(status_code=404)
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            http = AsyncMock()
+            http.post.side_effect = [udm_fail, self_hosted_absent]
+            mock_cls.return_value.__aenter__.return_value = http
+
+            with pytest.raises(LocalAuthenticationError, match="Invalid username or password"):
+                await client.login()
+
+    @pytest.mark.asyncio
+    async def test_login_400_invalid_message_is_not_swallowed(self, mock_settings):
+        """Test /api/login 400 with Invalid message surfaces credential error."""
+        client = UniFiLocalClient()
+        client._is_udm = False
+
+        response = MagicMock(status_code=400)
+        response.json.return_value = {"meta": {"msg": "Invalid username or password"}}
+        with patch("ui_cli.local_client.httpx.AsyncClient") as mock_cls:
+            self._mock_http_client(mock_cls, response)
+            with pytest.raises(LocalAuthenticationError, match="Invalid username or password"):
+                await client.login()
+
+    @pytest.mark.asyncio
     async def test_ensure_authenticated_reports_cached_session(self, mock_settings):
         """Test ensure_authenticated returns False when reusing a session."""
         client = UniFiLocalClient()
