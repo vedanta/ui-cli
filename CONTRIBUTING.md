@@ -117,7 +117,7 @@ ui-cli/
 │   ├── main.py              # CLI entry point
 │   ├── client.py            # Site Manager API client
 │   ├── local_client.py      # Local Controller API client
-│   ├── settings.py          # Configuration
+│   ├── config.py            # Configuration
 │   ├── output.py            # Output formatting
 │   └── commands/
 │       ├── hosts.py         # Cloud: hosts commands
