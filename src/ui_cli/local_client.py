@@ -200,6 +200,7 @@ class UniFiLocalClient:
                 await self._detect_controller_type(client)
 
             try:
+                udm_auth_error: LocalAuthenticationError | None = None
                 # Try UDM-style auth first
                 if self._is_udm:
                     login_data = {
@@ -230,12 +231,22 @@ class UniFiLocalClient:
                             "to your current TOTP code."
                         )
                     elif response.status_code == 403:
-                        # 403 on UDM often means wrong credentials
-                        raise LocalAuthenticationError(
+                        # 403 on UDM often means wrong credentials.
+                        # Keep this error for possible re-raise when /api/login is absent.
+                        udm_auth_error = LocalAuthenticationError(
                             "Invalid username or password (or account lacks API access)"
                         )
                     elif response.status_code == 401:
-                        raise LocalAuthenticationError("Invalid username or password")
+                        # Keep this error for possible re-raise when /api/login is absent.
+                        udm_auth_error = LocalAuthenticationError(
+                            "Invalid username or password"
+                        )
+                    else:
+                        # Self-hosted 10.x can be misdetected as UDM. Fall through
+                        # to /api/login and only re-raise this if /api/login is absent.
+                        udm_auth_error = LocalAuthenticationError(
+                            f"Authentication failed: HTTP {response.status_code}"
+                        )
 
                 # Try Cloud Key / self-hosted style auth
                 response = await client.post(
@@ -254,16 +265,20 @@ class UniFiLocalClient:
                     return True
                 elif response.status_code == 400:
                     # Check response for more details
+                    error_msg = ""
                     try:
                         error_data = response.json()
                         error_msg = error_data.get("meta", {}).get("msg", "")
-                        if "Invalid" in error_msg:
-                            raise LocalAuthenticationError("Invalid username or password")
                     except Exception:
                         pass
+                    if "Invalid" in error_msg:
+                        raise LocalAuthenticationError("Invalid username or password")
                     raise LocalAuthenticationError(
                         "Authentication failed - check credentials"
                     )
+                elif response.status_code in (404, 405) and udm_auth_error is not None:
+                    # Real UDMs do not expose /api/login; preserve original UDM error.
+                    raise udm_auth_error
                 elif response.status_code in (401, 403):
                     raise LocalAuthenticationError("Invalid username or password")
                 else:
